@@ -28,6 +28,8 @@ Maintainer: [ Kevin Yu (@yqlbu) ](https://github.com/yqlbu)
 
 Mosdns Official Wiki: https://irine-sistiana.gitbook.io/mosdns-wiki/
 
+## How to Use
+
 Please checkout the [blog post](https://www.hikariai.net/blog/26-mosdns-the-next-generation-dns-resolver/#sample-configuration) to know more in details.
 
 ## CN Users
