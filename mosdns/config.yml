@@ -144,6 +144,52 @@ plugins:
           trusted: true
           enable_pipeline: true
 
+  # cisco opendns
+  - tag: opendns_doh
+    type: forward
+    args:
+      upstream:
+        - addr: "https://doh.opendns.com/dns-query" # DoH server address
+          ip_addr: # server ip addresses
+            - "2620:119:35::35"
+            - "208.67.222.222"
+            - "2620:119:53::53"
+            - "208.67.220.220"
+          trusted: true
+
+  # adguard dns
+  - tag: adguard_doh
+    type: forward
+    args:
+      upstream:
+        - addr: "https://dns.adguard-dns.com/dns-query" # DoH server address
+          ip_addr: # server ip addresses
+            - "2a10:50c0::ad1:ff"
+            - "94.140.14.14"
+            - "2a10:50c0::ad2:ff"
+            - "94.140.15.15"
+          trusted: true
+  - tag: adguard_dot
+    type: fast_forward
+    args:
+      upstream:
+        - addr: "tls://dns.adguard-dns.com" # DoT server address
+          dial_addr: "94.140.14.15"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.adguard-dns.com"
+          dial_addr: "94.140.15.16"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.adguard-dns.com"
+          dial_addr: "2a10:50c0::bad1:ff"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.adguard-dns.com"
+          dial_addr: "2a10:50c0::bad2:ff"
+          trusted: true
+          enable_pipeline: true
+
   # cloudflare dns
   - tag: cloudflare_doh
     type: forward
@@ -221,7 +267,7 @@ plugins:
           enable_http3: true
 
   # doq backup resolver
-  - tag: adguard
+  - tag: adguard_quic
     type: forward
     args:
       upstream:
@@ -292,9 +338,12 @@ plugins:
         - parallel:
             - - google_doh
             - - cloudflare_doh
+            - - adguard_doh
+            #- - opendns_doh
             - - google_dot
             - - cloudflare_dot
-            - - adguard # secondary
+            - - adguard_dot
+            #- - adguard_quic
             - - google_h3
             - - cloudflare_h3
         # secondary:
