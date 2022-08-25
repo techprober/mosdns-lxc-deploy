@@ -349,6 +349,7 @@ plugins:
           exec:
             - _new_nxdomain_response # empty response
             - _return
-        - redis_cache # cache
+        # - mem_cache # mem_cache
+        - redis_cache # redis_cache
         - main_sequence # run main query sequence
         - modify_ttl
