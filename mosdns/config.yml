@@ -7,9 +7,6 @@ log:
 
 # data source config
 data_providers:
-  - tag: cn
-    file: "/etc/mosdns/cn.dat"
-    auto_reload: false
   - tag: geoip
     file: "/etc/mosdns/geoip.dat"
     auto_reload: false
