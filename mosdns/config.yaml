@@ -1,4 +1,4 @@
-#/etc/mosdns/config.json
+#/etc/mosdns/config.yaml
 ---
 # log config
 log:
