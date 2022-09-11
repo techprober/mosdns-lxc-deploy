@@ -100,7 +100,7 @@ plugins:
           trusted: true
   
       bootstrap:
-        - "tls://1.1.1.1"
+        - "https://223.6.6.6/dns-query"
         - "https://223.5.5.5/dns-query"
       timeout: 5 # default timeout
 
