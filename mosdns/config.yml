@@ -1,9 +1,9 @@
-#/etc/mosdns/config.yaml
+#/etc/mosdns/config.json
 ---
 # log config
-log:
-  level: info # ["debug", "info", "warn", and "error"], default is set to "info"
-  file: "/var/log/mosdns.log"
+# log:
+#   level: info # ["debug", "info", "warn", and "error"], default is set to "info"
+#   file: "/var/log/mosdns.log"
 
 # data source config
 data_providers:
@@ -26,10 +26,10 @@ servers:
     listeners:
       # --- local port binding --- #
       # local ipv6
-      - protocol: udp
-        addr: "[::1]:53"
-      - protocol: tcp
-        addr: "[::1]:53"
+      # - protocol: udp
+      #   addr: "[::1]:53"
+      # - protocol: tcp
+      #   addr: "[::1]:53"
       # local ipv4
       - protocol: udp
         addr: "127.0.0.1:53"
@@ -51,6 +51,14 @@ servers:
 # plugin config
 plugins:
   # --- Excutable Plugins --- #
+  - tag: "reverse_lookup"
+    type: "reverse_lookup"
+    args:
+      size: 65535 # default cache size
+      redis: "redis://10.189.17.4:6379/1"
+      ttl: 1800 # default ttl, 1800s (30min)
+      handle_ptr: false # Handle PTR response. If PTR's IP hits the cache, then respond; else continue the query search
+
   # cache
   # - tag: "mem_cache"
   #   type: "cache"
@@ -63,7 +71,6 @@ plugins:
   - tag: "redis_cache"
     type: "cache"
     args:
-      size: 2048 # query max number
       lazy_cache_ttl: 86400 # lazy cache ttl
       lazy_cache_reply_ttl: 30 # timeout ttl
       cache_everything: true
@@ -77,6 +84,10 @@ plugins:
     args:
       minimal_ttl: 300
       maximum_ttl: 3600
+
+  # metrics_collector
+  - type: "metrics_collector"
+    tag: "metrics"
 
   # --- Domestic DNS --- #
   # alidns
@@ -98,7 +109,6 @@ plugins:
             - "2400:3200::1"
             - "223.6.6.6"
           trusted: true
-  
       bootstrap:
         - "https://223.6.6.6/dns-query"
         - "https://223.5.5.5/dns-query"
@@ -353,6 +363,9 @@ plugins:
     type: sequence
     args:
       exec:
+        # optimization
+        - _misc_optm
+
         # CN domains
         - if: "query_cn"
           exec:
@@ -395,7 +408,9 @@ plugins:
           exec:
             - _new_nxdomain_response # empty response
             - _return
+        - reverse_lookup
         # - mem_cache # mem_cache
         - redis_cache # redis_cache
         - main_sequence # run main query sequence
         - modify_ttl
+        - metrics
