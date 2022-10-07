@@ -76,7 +76,7 @@ plugins:
       cache_everything: true
       # redis config
       redis: "redis://10.189.17.4:6379/1"
-      redis_timeout: 500
+      redis_timeout: 1000
 
   # ttl
   - tag: "modify_ttl"
