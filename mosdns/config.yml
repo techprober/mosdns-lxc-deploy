@@ -343,16 +343,19 @@ plugins:
       exec:
         # - primary:
         - parallel:
-            - - google_doh
-            - - cloudflare_doh
-            - - adguard_doh
-            #- - opendns_doh
-            - - google_dot
-            - - cloudflare_dot
-            - - adguard_dot
-            #- - adguard_quic
-            - - google_h3
-            - - cloudflare_h3
+            # doh
+            - opendns_doh
+            - google_doh
+            - adguard_doh
+            # - cloudflare_doh
+            # dot
+            # - google_dot
+            # - cloudflare_dot
+            # - adguard_dot
+            # - adguard_quic
+            # others
+            # - google_h3
+            # - cloudflare_h3
         # secondary:
         #   - adguard
         # fast_fallback: 600
