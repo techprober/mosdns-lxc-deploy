@@ -4,17 +4,17 @@ services:
   redis:
     container_name: redis
     image: "redis:alpine"
-    command: redis-server
     ports:
       - "6379:6379"
     volumes:
-      - $PWD/redis-data:/var/lib/redis
-      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+      - /etc/redis/redis-data:/data
+      - /etc/redis/redis-conf:/etc/redis
     environment:
       - REDIS_REPLICATION_MODE=master
     networks:
       node_net:
         ipv4_address: 172.28.1.4
+    command: redis-server /etc/redis/redis.conf
     restart: unless-stopped
 
   watchtower:
