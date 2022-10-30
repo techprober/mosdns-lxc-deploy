@@ -1,0 +1,466 @@
+#/etc/mosdns/config.yaml
+---
+# log config
+# log:
+#   level: info # ["debug", "info", "warn", and "error"], default is set to "info"
+#   file: "/var/log/mosdns.log"
+
+# data source config
+data_providers:
+  - tag: geoip
+    file: "/etc/mosdns/geoip.dat"
+    auto_reload: true
+  - tag: geosite
+    file: "/etc/mosdns/geosite.dat"
+    auto_reload: true
+
+# api config
+api:
+  http: ":8080"
+
+# server config
+servers:
+  # main query sequence
+  - exec: sequence_exec
+    timeout: 5
+    listeners:
+      # --- local port binding --- #
+      # local ipv6
+      # - protocol: udp
+      #   addr: "[::1]:53"
+      # - protocol: tcp
+      #   addr: "[::1]:53"
+
+      # local ipv4
+      - protocol: udp
+        addr: "127.0.0.1:53"
+      - protocol: tcp
+        addr: "127.0.0.1:53"
+
+      # --- interface binding --- #
+      # lag group
+      - protocol: udp
+        addr: "10.178.0.3:53"
+      - protocol: tcp
+        addr: "10.178.0.3:53"
+      # vlan 17
+      - protocol: udp
+        addr: "10.189.17.3:53"
+      - protocol: tcp
+        addr: "10.189.17.3:53"
+
+# plugin config
+plugins:
+  # --- Excutable Plugins --- #
+  - tag: "reverse_lookup"
+    type: "reverse_lookup"
+    args:
+      size: 65535 # default cache size
+      redis: "redis://10.189.17.4:6379/1"
+      ttl: 1800 # default ttl, 1800s (30min)
+      handle_ptr: false # Handle PTR response. If PTR's IP hits the cache, then respond; else continue the query search
+
+  # cache
+  - tag: "mem_cache"
+    type: "cache"
+    args:
+      size: 4096 # max query number
+      lazy_cache_ttl: 259200 # lazy cache ttl 86400 (1day) - 259200 (3days)
+      lazy_cache_reply_ttl: 5 # timeout ttl
+      cache_everything: true
+  
+  - tag: "redis_cache"
+    type: "cache"
+    args:
+      size: 4096 # max query number
+      lazy_cache_ttl: 259200 # lazy cache ttl 86400 (1day) - 259200 (3days)
+      lazy_cache_reply_ttl: 5 # timeout ttl
+      cache_everything: true
+      # redis config
+      redis: "redis://10.189.17.4:6379/1"
+      redis_timeout: 1000
+
+  # ttl
+  - tag: "modify_ttl"
+    type: "ttl"
+    args:
+      minimal_ttl: 300
+      maximum_ttl: 3600
+
+  # metrics_collector
+  - type: "metrics_collector"
+    tag: "metrics"
+
+  # --- Local DNS --- #
+  - tag: "local_resolver"
+    type: "forward"
+    args:
+      upstream:
+        - addr: "178.0.50.6:53"
+
+  # --- Domestic DNS --- #
+  - tag: "ali_doh"
+    type: "fast_forward"
+    args:
+      upstream:
+        - addr: "https://dns.alidns.com/dns-query" # DoH server address
+          dial_addr: "223.5.5.5"
+          bootstrap: "https://223.5.5.5/dns-query"
+          idle_timeout: 10
+          trusted: true
+          enable_pipeline: true
+        - addr: "https://dns.alidns.com/dns-query"
+          dial_addr: "223.6.6.6"
+          bootstrap: "https://223.5.5.5/dns-query"
+          idle_timeout: 10
+          trusted: true
+          enable_pipeline: true
+        # - addr: "https://dns.alidns.com/dns-query"
+        #   dial_addr: "2400:3200::1"
+        #   trusted: true
+        #   enable_pipeline: true
+        #   idle_timeout: 10
+        # - addr: "https://dns.alidns.com/dns-query"
+        #   dial_addr: "2400:3200:baba::1"
+        #   trusted: true
+        #   enable_pipeline: true
+        #   idle_timeout: 10
+
+  - tag: "ali_dot"
+    type: "fast_forward"
+    args:
+      upstream:
+        - addr: "tls://dns.alidns.com/dns-query" # DoT server address
+          dial_addr: "223.5.5.5"
+          bootstrap: "https://223.5.5.5/dns-query"
+          idle_timeout: 10
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.alidns.com/dns-query"
+          dial_addr: "223.6.6.6"
+          bootstrap: "https://223.5.5.5/dns-query"
+          idle_timeout: 10
+          trusted: true
+          enable_pipeline: true
+        # - addr: "tls://dns.alidns.com"
+        #   dial_addr: "2400:3200::1"
+        #   idle_timeout: 10
+        #   trusted: true
+        #   enable_pipeline: true
+        # - addr: "tls://dns.alidns.com"
+        #   dial_addr: "2400:3200:baba::1"
+        #   idle_timeout: 10
+        #   trusted: true
+        #   enable_pipeline: true
+
+  # --- Remote DNS --- #
+  # google dns
+  - tag: "google_doh"
+    type: "forward"
+    args:
+      upstream:
+        - addr: "https://dns.google/dns-query" # DoH server address
+          ip_addr: # server ip addresses
+            # - "2001:4860:4860::8844"
+            - "8.8.4.4"
+            # - "2001:4860:4860::8888"
+            - "8.8.8.8"
+          trusted: true
+
+  - tag: "google_dot"
+    type: "fast_forward"
+    args:
+      upstream:
+        - addr: "tls://dns.google" # DoT server address
+          dial_addr: "8.8.4.4"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.google"
+          dial_addr: "8.8.8.8"
+          trusted: true
+          enable_pipeline: true
+        # - addr: "tls://dns.google"
+        #   dial_addr: "2001:4860:4860::8888"
+        #   trusted: true
+        #   enable_pipeline: true
+
+  # cisco opendns
+  - tag: "opendns_doh"
+    type: "forward"
+    args:
+      upstream:
+        - addr: "https://doh.opendns.com/dns-query" # DoH server address
+          ip_addr: # server ip addresses
+            - "208.67.220.220"
+            - "208.67.222.222"
+            # - "2620:119:53::53"
+            # - "2620:119:35::35"
+          trusted: true
+
+  # adguard dns
+  - tag: "adguard_doh"
+    type: "forward"
+    args:
+      upstream:
+        - addr: "https://dns.adguard-dns.com/dns-query" # DoH server address
+          ip_addr: # server ip addresses
+            - "94.140.14.14"
+            - "94.140.15.15"
+            # - "2a10:50c0::ad1:ff"
+            # - "2a10:50c0::ad2:ff"
+          trusted: true
+
+  - tag: "adguard_dot"
+    type: "fast_forward"
+    args:
+      upstream:
+        - addr: "tls://dns.adguard-dns.com" # DoT server address
+          dial_addr: "94.140.14.15"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.adguard-dns.com"
+          dial_addr: "94.140.15.16"
+          trusted: true
+          enable_pipeline: true
+        # - addr: "tls://dns.adguard-dns.com"
+        #   dial_addr: "2a10:50c0::bad1:ff"
+        #   trusted: true
+        #   enable_pipeline: true
+        # - addr: "tls://dns.adguard-dns.com"
+        #   dial_addr: "2a10:50c0::bad2:ff"
+        #   trusted: true
+        #   enable_pipeline: true
+
+  # cloudflare dns
+  - tag: "cloudflare_doh"
+    type: "forward"
+    args:
+      upstream:
+        - addr: "https://cloudflare-dns.com/dns-query" # DoH server address
+          ip_addr: # server ip addresses
+            - "1.1.1.1"
+            - "1.0.0.1"
+            # - "2606:4700:4700::1001"
+            # - "2606:4700:4700::1111"
+          trusted: true
+
+  - tag: "cloudflare_dot"
+    type: "fast_forward"
+    args:
+      upstream:
+        - addr: "tls://1dot1dot1dot1.cloudflare-dns.com"
+          dial_addr: "1.0.0.1"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://1dot1dot1dot1.cloudflare-dns.com"
+          dial_addr: "1.1.1.1"
+          trusted: true
+          enable_pipeline: true
+        # - addr: "tls://1dot1dot1dot1.cloudflare-dns.com" # DoT server address
+        #   dial_addr: "2606:4700:4700::1001"
+        #   trusted: true
+        #   enable_pipeline: true
+        # - addr: "tls://1dot1dot1dot1.cloudflare-dns.com"
+        #   dial_addr: "2606:4700:4700::1111"
+        #   trusted: true
+        #   enable_pipeline: true
+
+  # h3 parallel
+  - tag: "google_h3"
+    type: "fast_forward"
+    args:
+      # upstream servers, at lease to configure one, send request in parallel to all servers
+      upstream:
+        - addr: "https://dns.google/dns-query"
+          dial_addr: "8.8.4.4"
+          trusted: true
+          enable_http3: true
+        - addr: "https://dns.google/dns-query"
+          dial_addr: "8.8.8.8"
+          trusted: true
+          enable_http3: true
+        # - addr: "https://dns.google/dns-query"
+        #   dial_addr: "2001:4860:4860::8888"
+        #   trusted: true
+        #   enable_http3: true
+        # - addr: "https://dns.google/dns-query"
+        #   dial_addr: "2001:4860:4860::8844"
+        #   trusted: true
+        #   enable_http3: true
+
+  - tag: "cloudflare_h3"
+    type: "fast_forward"
+    args:
+      upstream:
+        - addr: "https://cloudflare-dns.com/dns-query"
+          dial_addr: "1.0.0.1"
+          trusted: true
+          enable_http3: true
+        - addr: "https://cloudflare-dns.com/dns-query"
+          dial_addr: "1.1.1.1"
+          trusted: true
+          enable_http3: true
+        # - addr: "https://cloudflare-dns.com/dns-query"
+        #   dial_addr: "2606:4700:4700::1001"
+        #   trusted: true
+        #   enable_http3: true
+        # - addr: "https://cloudflare-dns.com/dns-query"
+        #   dial_addr: "2606:4700:4700::1111"
+        #   trusted: true
+        #   enable_http3: true
+
+  # doq backup resolver
+  - tag: "adguard_quic"
+    type: "forward"
+    args:
+      upstream:
+        - addr: "quic://dns-unfiltered.adguard.com" # DoQ server
+          ip_addr: # server addresses
+            - "94.140.14.140"
+            - "94.140.14.141"
+            # - "2a10:50c0::1:ff"
+            # - "2a10:50c0::2:ff"
+          trusted: true
+
+  # --- query matcher --- #
+  # query - CN domains
+  - tag: "query_cn"
+    type: "query_matcher"
+    args:
+      domain:
+        - "provider:geosite:cn"
+
+  # query - Local domains
+  - tag: "query_local"
+    type: "query_matcher"
+    args:
+      domain:
+        - "*.homelab.sh"
+        - "homelab.sh"
+
+  # query - GFW domains
+  - tag: "query_gfw"
+    type: "query_matcher"
+    args:
+      domain:
+        - "provider:geosite:gfw"
+
+  # query - non-CN domains
+  - tag: "query_notcn"
+    type: "query_matcher"
+    args:
+      domain:
+        - "provider:geosite:geolocation-!cn"
+
+  # query - ads
+  - tag: "query_ads"
+    type: "query_matcher"
+    args:
+      domain:
+        - "provider:geosite:category-ads-all"
+
+  # query - CN IP
+  - tag: "response_cnip"
+    type: "response_matcher"
+    args:
+      ip:
+        - "provider:geoip:cn"
+
+  # --- Sequence --- #
+  # domestic sequence
+  - tag: "domestic_resolver"
+    type: "sequence"
+    args:
+      exec:
+        - parallel:
+            # doh
+            # - ali_doh
+            # dot
+            - ali_dot
+
+  # remote sequence
+  - tag: "remote_resolver"
+    type: "sequence"
+    args:
+      exec:
+        - parallel:
+            # doh
+            - - google_doh
+              - opendns_doh
+            #   - cloudflare_doh
+            #   - adguard_doh
+            # dot
+            - - google_dot
+            #   - cloudflare_dot
+            #   - adguard_dot
+            # others
+            # - - google_h3
+            #   - cloudflare_h3
+            #   - adguard_quic
+
+  # upstream_sequence
+  - tag: "upstream_sequence"
+    type: "sequence"
+    args:
+      exec:
+        - _misc_optm # optimization
+        - _no_ecs # no ecs
+
+        # local domains
+        # - if: query_local
+        #   exec:
+        #     - metrics
+        #     - local_resolver
+
+        # ads queries
+        - if: query_ads
+          exec:
+            - _new_nxdomain_response # empty response
+            - _return
+
+        # CN domains
+        - if: query_cn
+          exec:
+            - _prefer_ipv4 # ipv4 as priority
+            - _pad_query
+            - domestic_resolver
+            - if: response_cnip # cnip as result
+              exec:
+                - _return # end
+
+        # non-CN domains
+        - if: query_notcn
+          exec:
+            - _prefer_ipv4 # ipv4 as priority
+            - _pad_query
+            - remote_resolver
+            - if: "!response_cnip" # non-CN ip as result
+              exec:
+                - _return # end
+
+        # other condition
+        - primary: 
+            - _prefer_ipv4 # ipv4 as priority
+            - _pad_query
+            - remote_resolver
+          secondary:
+            - _prefer_ipv4 # ipv4 as priority
+            - _pad_query
+            - domestic_resolver
+          stat_length: 10
+          threshold: 5
+          fast_fallback: 200
+          always_standby: true
+
+  # --- sequence execution --- #
+  - tag: "sequence_exec"
+    type: "sequence"
+    args:
+      exec:
+        - metrics
+        # - mem_cache # mem_cache
+        - reverse_lookup
+        - redis_cache # redis_cache
+        - upstream_sequence # run main query sequence
+        - modify_ttl
+
