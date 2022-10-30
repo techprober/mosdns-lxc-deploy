@@ -111,7 +111,7 @@ plugins:
           enable_pipeline: true
         - addr: "https://dns.alidns.com/dns-query"
           dial_addr: "223.6.6.6"
-          bootstrap: "https://223.5.5.5/dns-query"
+          bootstrap: "https://223.6.6.6/dns-query"
           idle_timeout: 10
           trusted: true
           enable_pipeline: true
@@ -138,7 +138,7 @@ plugins:
           enable_pipeline: true
         - addr: "tls://dns.alidns.com/dns-query"
           dial_addr: "223.6.6.6"
-          bootstrap: "https://223.5.5.5/dns-query"
+          bootstrap: "https://223.6.6.6/dns-query"
           idle_timeout: 10
           trusted: true
           enable_pipeline: true
