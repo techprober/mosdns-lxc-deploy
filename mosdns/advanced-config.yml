@@ -457,6 +457,7 @@ plugins:
     type: "sequence"
     args:
       exec:
+        - _query_summary
         - metrics
         # - mem_cache # mem_cache
         - reverse_lookup
