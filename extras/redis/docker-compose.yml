@@ -4,6 +4,7 @@ services:
   redis:
     container_name: redis
     image: "redis:alpine"
+    user: root
     ports:
       - "6379:6379"
     volumes:
