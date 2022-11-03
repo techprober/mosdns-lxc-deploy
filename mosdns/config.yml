@@ -181,11 +181,11 @@ plugins:
     args:
       upstream:
         - addr: "tls://dns.adguard-dns.com" # DoT server address
-          dial_addr: "94.140.14.15"
+          dial_addr: "94.140.14.14"
           trusted: true
           enable_pipeline: true
         - addr: "tls://dns.adguard-dns.com"
-          dial_addr: "94.140.15.16"
+          dial_addr: "94.140.15.15"
           trusted: true
           enable_pipeline: true
         - addr: "tls://dns.adguard-dns.com"
