@@ -386,13 +386,13 @@ plugins:
     args:
       domain:
       - "provider:geosite:geolocation-!cn"
-
-  # query - CN ip
-  - tag: "response_has_cn_ip"
-    type: response_matcher
+      
+  # query - custom domains
+  - tag: "query_is_custom_domain"
+    type: query_matcher
     args:
-      ip:
-      - "provider:geoip:cn"
+      domain:
+      - "linkedin.com"
 
   # query - ads
   - tag: "query_is_ad_domain"
@@ -400,6 +400,13 @@ plugins:
     args:
       domain:
       - "provider:geosite:category-ads-all"
+
+  # response - CN ip
+  - tag: "response_has_cn_ip"
+    type: response_matcher
+    args:
+      ip:
+      - "provider:geoip:cn"
 
   # --- resolver --- #
   # domestic resolver
@@ -468,7 +475,7 @@ plugins:
             exec:
               - _return # end
 
-        - if: query_is_non_cn_domain
+        - if: query_is_non_cn_domain || query_is_custom_domain
           exec:
           - remote_resolver
           - if: "!response_has_cn_ip"  # noncnip as result
