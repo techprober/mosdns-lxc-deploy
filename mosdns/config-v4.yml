@@ -386,6 +386,15 @@ plugins:
     args:
       domain:
       - "provider:geosite:geolocation-!cn"
+      - "provider:geosite:gfw"
+      - "provider:geosite:google-scholar"
+      - "provider:geosite:category-scholar-!cn"
+      - "provider:geosite:icloud@cn"
+      - "provider:geosite:apple@cn"
+      - "provider:geosite:github"
+      - "provider:geosite:twitter"
+      - "provider:geosite:telegram"
+      - "provider:geosite:google"
       
   # query - custom domains
   - tag: "query_is_custom_domain"
