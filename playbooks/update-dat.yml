@@ -1,0 +1,43 @@
+---
+- name: Add user to remote server
+  hosts: all
+  become: yes
+
+  vars:
+    - dest_path: /etc/mosdns/
+    - restart_daemon: yes
+    - daemon_service_name: mosdns
+
+  tasks:
+    - name: Gather package facts
+      package_facts:
+        manager: apt
+
+    - name: Install jq if jq is absent
+      apt:
+        name: jq
+        state: present
+      when: '"jq" not in ansible_facts.packages'
+
+    - name: Get latest release tag
+      shell: 'curl https://api.github.com/repos/techprober/v2ray-rules-dat/releases/latest --silent |  jq -r ".tag_name"'
+      register: latest_release
+
+    - name: Print result
+      debug:
+        msg: |
+          "release_url: https://github.com/techprober/v2ray-rules-dat/releases/tag/{{ latest_release.stdout }}"
+
+    - name: Download dat files with the latest release
+      ansible.builtin.get_url:
+        url: "{{ item }}"
+        dest: "{{ dest_path }}"
+      loop:
+        -  "https://github.com/techprober/v2ray-rules-dat/releases/download/{{ latest_release.stdout }}/geosite.dat"
+        -  "https://github.com/techprober/v2ray-rules-dat/releases/download/{{ latest_release.stdout }}/geoip.dat"
+    
+    - name: Restart daemon service (optional)
+      ansible.builtin.service:
+        name: "{{ daemon_service_name }}"
+        state: restarted
+      when: restart_daemon
