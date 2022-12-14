@@ -1,5 +1,5 @@
 ---
-- name: Add user to remote server
+- name: Update dat files
   hosts: all
   become: yes
 
