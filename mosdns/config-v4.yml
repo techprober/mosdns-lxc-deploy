@@ -401,7 +401,7 @@ plugins:
     type: query_matcher
     args:
       domain:
-      - "linkedin.com"
+      - "keyword:linkedin"
 
   # query - ads
   - tag: "query_is_ad_domain"
