@@ -28,14 +28,16 @@
         msg: |
           "release_url: https://github.com/techprober/v2ray-rules-dat/releases/tag/{{ latest_release.stdout }}"
 
-    - name: Download dat files with the latest release
+    - name: Download rule files with the latest release
       ansible.builtin.get_url:
-        url: "{{ item }}"
+        url: "https://github.com/techprober/v2ray-rules-dat/releases/download/{{ latest_release.stdout }}/{{ item }}"
         dest: "{{ dest_path }}"
       loop:
-        -  "https://github.com/techprober/v2ray-rules-dat/releases/download/{{ latest_release.stdout }}/geosite.dat"
-        -  "https://github.com/techprober/v2ray-rules-dat/releases/download/{{ latest_release.stdout }}/geoip.dat"
-    
+        - "geosite.dat"
+        - "geoip.dat"
+        - "reject-list.txt"
+        - "direct-list.txt"
+
     - name: Restart daemon service (optional)
       ansible.builtin.service:
         name: "{{ daemon_service_name }}"

@@ -16,18 +16,18 @@ data_providers:
 
   # customizable list
   - tag: hosts
-    file: /etc/mosdns/rules/hosts.txt
+    file: /etc/mosdns/hosts.txt
     auto_reload: true
   - tag: direct
-    file: /etc/mosdns/rules/direct.txt
+    file: /etc/mosdns/direct.txt
     auto_reload: true
   - tag: reject
-    file: /etc/mosdns/rules/reject.txt
+    file: /etc/mosdns/reject.txt
     auto_reload: true
   - tag: redirect
-    file: /etc/mosdns/rules/redirect.txt
+    file: /etc/mosdns/redirect.txt
     auto_reload: true
-    
+
 # api config
 api:
   http: ":8080"
@@ -38,25 +38,25 @@ servers:
   - exec: main_sequence
     timeout: 5
     listeners:
-    # --- local port binding --- #
-    # local ipv6
-    - protocol: udp
-      addr: "[::1]:53"
-    - protocol: tcp
-      addr: "[::1]:53"
+      # --- local port binding --- #
+      # local ipv6
+      - protocol: udp
+        addr: "[::1]:53"
+      - protocol: tcp
+        addr: "[::1]:53"
 
-    # local ipv4
-    - protocol: udp
-      addr: "127.0.0.1:53"
-    - protocol: tcp
-      addr: "127.0.0.1:53"
+      # local ipv4
+      - protocol: udp
+        addr: "127.0.0.1:53"
+      - protocol: tcp
+        addr: "127.0.0.1:53"
 
-    # --- interface binding --- #
-    # vlan100
-    - protocol: udp
-      addr: "10.100.0.3:53"
-    - protocol: tcp
-      addr: "10.100.0.3:53"
+      # --- interface binding --- #
+      # vlan100
+      - protocol: udp
+        addr: "10.100.0.3:53"
+      - protocol: tcp
+        addr: "10.100.0.3:53"
 
 # plugin config
 plugins:
@@ -77,7 +77,7 @@ plugins:
       lazy_cache_ttl: 259200 # lazy cache ttl 86400 (1day) - 259200 (3days)
       lazy_cache_reply_ttl: 10 # timeout ttl
       cache_everything: true
-  
+
   - tag: "redis_cache"
     type: cache
     args:
@@ -105,64 +105,64 @@ plugins:
     type: forward
     args:
       upstream:
-      - addr: "10.178.0.6"
+        - addr: "10.178.0.6"
 
   # --- Domestic DNS --- #
   - tag: "ali_doh"
     type: fast_forward
     args:
       upstream:
-      - addr: "https://dns.alidns.com/dns-query" # DoH server address
-        dial_addr: "223.5.5.5"
-        bootstrap: "https://223.5.5.5/dns-query"
-        idle_timeout: 10
-        trusted: true
-        enable_pipeline: true
-      - addr: "https://dns.alidns.com/dns-query"
-        dial_addr: "223.6.6.6"
-        bootstrap: "https://223.6.6.6/dns-query"
-        idle_timeout: 10
-        trusted: true
-        enable_pipeline: true
-      - addr: "https://dns.alidns.com/dns-query"
-        dial_addr: "2400:3200::1"
-        bootstrap: "https://2400:3200:baba::1/dns-query"
-        trusted: true
-        enable_pipeline: true
-        idle_timeout: 10
-      - addr: "https://dns.alidns.com/dns-query"
-        dial_addr: "2400:3200:baba::1"
-        bootstrap: "https://2400:3200:baba::1/dns-query"
-        trusted: true
-        enable_pipeline: true
-        idle_timeout: 10
+        - addr: "https://dns.alidns.com/dns-query" # DoH server address
+          dial_addr: "223.5.5.5"
+          bootstrap: "https://223.5.5.5/dns-query"
+          idle_timeout: 10
+          trusted: true
+          enable_pipeline: true
+        - addr: "https://dns.alidns.com/dns-query"
+          dial_addr: "223.6.6.6"
+          bootstrap: "https://223.6.6.6/dns-query"
+          idle_timeout: 10
+          trusted: true
+          enable_pipeline: true
+        - addr: "https://dns.alidns.com/dns-query"
+          dial_addr: "2400:3200::1"
+          bootstrap: "https://2400:3200:baba::1/dns-query"
+          trusted: true
+          enable_pipeline: true
+          idle_timeout: 10
+        - addr: "https://dns.alidns.com/dns-query"
+          dial_addr: "2400:3200:baba::1"
+          bootstrap: "https://2400:3200:baba::1/dns-query"
+          trusted: true
+          enable_pipeline: true
+          idle_timeout: 10
 
   - tag: "ali_dot"
     type: fast_forward
     args:
       upstream:
-      - addr: "tls://dns.alidns.com/dns-query" # DoT server address
-        dial_addr: "223.5.5.5"
-        bootstrap: "https://223.5.5.5/dns-query"
-        idle_timeout: 10
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://dns.alidns.com/dns-query"
-        dial_addr: "223.6.6.6"
-        bootstrap: "https://223.6.6.6/dns-query"
-        idle_timeout: 10
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://dns.alidns.com"
-        dial_addr: "2400:3200::1"
-        idle_timeout: 10
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://dns.alidns.com"
-        dial_addr: "2400:3200:baba::1"
-        idle_timeout: 10
-        trusted: true
-        enable_pipeline: true
+        - addr: "tls://dns.alidns.com/dns-query" # DoT server address
+          dial_addr: "223.5.5.5"
+          bootstrap: "https://223.5.5.5/dns-query"
+          idle_timeout: 10
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.alidns.com/dns-query"
+          dial_addr: "223.6.6.6"
+          bootstrap: "https://223.6.6.6/dns-query"
+          idle_timeout: 10
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.alidns.com"
+          dial_addr: "2400:3200::1"
+          idle_timeout: 10
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.alidns.com"
+          dial_addr: "2400:3200:baba::1"
+          idle_timeout: 10
+          trusted: true
+          enable_pipeline: true
 
   # --- Remote DNS --- #
   # google dns
@@ -170,115 +170,115 @@ plugins:
     type: forward
     args:
       upstream:
-      - addr: "https://dns.google/dns-query" # DoH server address
-        ip_addr: # server ip addresses
-          - "8.8.8.8"
-          - "8.8.4.4"
-          - "2001:4860:4860::8844"
-          - "2001:4860:4860::8888"
-        trusted: true
+        - addr: "https://dns.google/dns-query" # DoH server address
+          ip_addr: # server ip addresses
+            - "8.8.8.8"
+            - "8.8.4.4"
+            - "2001:4860:4860::8844"
+            - "2001:4860:4860::8888"
+          trusted: true
 
   - tag: "google_dot"
     type: fast_forward
     args:
       upstream:
-      - addr: "tls://dns.google" # DoT server address
-        dial_addr: "8.8.4.4"
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://dns.google"
-        dial_addr: "8.8.8.8"
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://dns.google"
-        dial_addr: "2001:4860:4860::8844"
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://dns.google"
-        dial_addr: "2001:4860:4860::8888"
-        trusted: true
-        enable_pipeline: true
+        - addr: "tls://dns.google" # DoT server address
+          dial_addr: "8.8.4.4"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.google"
+          dial_addr: "8.8.8.8"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.google"
+          dial_addr: "2001:4860:4860::8844"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.google"
+          dial_addr: "2001:4860:4860::8888"
+          trusted: true
+          enable_pipeline: true
 
   # cisco opendns
   - tag: "opendns_doh"
     type: forward
     args:
       upstream:
-      - addr: "https://doh.opendns.com/dns-query" # DoH server address
-        ip_addr: # server ip addresses
-          - "208.67.220.220"
-          - "208.67.222.222"
-          - "2620:119:53::53"
-          - "2620:119:35::35"
-        trusted: true
+        - addr: "https://doh.opendns.com/dns-query" # DoH server address
+          ip_addr: # server ip addresses
+            - "208.67.220.220"
+            - "208.67.222.222"
+            - "2620:119:53::53"
+            - "2620:119:35::35"
+          trusted: true
 
   # adguard dns
   - tag: "adguard_doh"
     type: forward
     args:
       upstream:
-      - addr: "https://dns.adguard-dns.com/dns-query" # DoH server address
-        ip_addr: # server ip addresses
-          - "94.140.14.14"
-          - "94.140.15.15"
-          - "2a10:50c0::ad1:ff"
-          - "2a10:50c0::ad2:ff"
-        trusted: true
+        - addr: "https://dns.adguard-dns.com/dns-query" # DoH server address
+          ip_addr: # server ip addresses
+            - "94.140.14.14"
+            - "94.140.15.15"
+            - "2a10:50c0::ad1:ff"
+            - "2a10:50c0::ad2:ff"
+          trusted: true
 
   - tag: "adguard_dot"
     type: fast_forward
     args:
       upstream:
-      - addr: "tls://dns.adguard-dns.com" # DoT server address
-        dial_addr: "94.140.14.14"
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://dns.adguard-dns.com"
-        dial_addr: "94.140.15.15"
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://dns.adguard-dns.com"
-        dial_addr: "2a10:50c0::ad1:ff"
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://dns.adguard-dns.com"
-        dial_addr: "2a10:50c0::ad2:ff"
-        trusted: true
-        enable_pipeline: true
+        - addr: "tls://dns.adguard-dns.com" # DoT server address
+          dial_addr: "94.140.14.14"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.adguard-dns.com"
+          dial_addr: "94.140.15.15"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.adguard-dns.com"
+          dial_addr: "2a10:50c0::ad1:ff"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://dns.adguard-dns.com"
+          dial_addr: "2a10:50c0::ad2:ff"
+          trusted: true
+          enable_pipeline: true
 
   # cloudflare dns
   - tag: "cloudflare_doh"
     type: forward
     args:
       upstream:
-      - addr: "https://cloudflare-dns.com/dns-query" # DoH server address
-        ip_addr: # server ip addresses
-          - "1.1.1.1"
-          - "1.0.0.1"
-          - "2606:4700:4700::1001"
-          - "2606:4700:4700::1111"
-        trusted: true
+        - addr: "https://cloudflare-dns.com/dns-query" # DoH server address
+          ip_addr: # server ip addresses
+            - "1.1.1.1"
+            - "1.0.0.1"
+            - "2606:4700:4700::1001"
+            - "2606:4700:4700::1111"
+          trusted: true
 
   - tag: "cloudflare_dot"
     type: fast_forward
     args:
       upstream:
-      - addr: "tls://1dot1dot1dot1.cloudflare-dns.com"
-        dial_addr: "1.0.0.1"
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://1dot1dot1dot1.cloudflare-dns.com"
-        dial_addr: "1.1.1.1"
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://1dot1dot1dot1.cloudflare-dns.com" # DoT server address
-        dial_addr: "2606:4700:4700::1001"
-        trusted: true
-        enable_pipeline: true
-      - addr: "tls://1dot1dot1dot1.cloudflare-dns.com"
-        dial_addr: "2606:4700:4700::1111"
-        trusted: true
-        enable_pipeline: true
+        - addr: "tls://1dot1dot1dot1.cloudflare-dns.com"
+          dial_addr: "1.0.0.1"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://1dot1dot1dot1.cloudflare-dns.com"
+          dial_addr: "1.1.1.1"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://1dot1dot1dot1.cloudflare-dns.com" # DoT server address
+          dial_addr: "2606:4700:4700::1001"
+          trusted: true
+          enable_pipeline: true
+        - addr: "tls://1dot1dot1dot1.cloudflare-dns.com"
+          dial_addr: "2606:4700:4700::1111"
+          trusted: true
+          enable_pipeline: true
 
   # h3 parallel
   - tag: "google_h3"
@@ -286,56 +286,56 @@ plugins:
     args:
       # upstream servers, at lease to configure one, send request in parallel to all servers
       upstream:
-      - addr: "https://dns.google/dns-query"
-        dial_addr: "8.8.4.4"
-        trusted: true
-        enable_http3: true
-      - addr: "https://dns.google/dns-query"
-        dial_addr: "8.8.8.8"
-        trusted: true
-        enable_http3: true
-      - addr: "https://dns.google/dns-query"
-        dial_addr: "2001:4860:4860::8888"
-        trusted: true
-        enable_http3: true
-      - addr: "https://dns.google/dns-query"
-        dial_addr: "2001:4860:4860::8844"
-        trusted: true
-        enable_http3: true
+        - addr: "https://dns.google/dns-query"
+          dial_addr: "8.8.4.4"
+          trusted: true
+          enable_http3: true
+        - addr: "https://dns.google/dns-query"
+          dial_addr: "8.8.8.8"
+          trusted: true
+          enable_http3: true
+        - addr: "https://dns.google/dns-query"
+          dial_addr: "2001:4860:4860::8888"
+          trusted: true
+          enable_http3: true
+        - addr: "https://dns.google/dns-query"
+          dial_addr: "2001:4860:4860::8844"
+          trusted: true
+          enable_http3: true
 
   - tag: "cloudflare_h3"
     type: fast_forward
     args:
       upstream:
-      - addr: "https://cloudflare-dns.com/dns-query"
-        dial_addr: "1.0.0.1"
-        trusted: true
-        enable_http3: true
-      - addr: "https://cloudflare-dns.com/dns-query"
-        dial_addr: "1.1.1.1"
-        trusted: true
-        enable_http3: true
-      - addr: "https://cloudflare-dns.com/dns-query"
-        dial_addr: "2606:4700:4700::1001"
-        trusted: true
-        enable_http3: true
-      - addr: "https://cloudflare-dns.com/dns-query"
-        dial_addr: "2606:4700:4700::1111"
-        trusted: true
-        enable_http3: true
+        - addr: "https://cloudflare-dns.com/dns-query"
+          dial_addr: "1.0.0.1"
+          trusted: true
+          enable_http3: true
+        - addr: "https://cloudflare-dns.com/dns-query"
+          dial_addr: "1.1.1.1"
+          trusted: true
+          enable_http3: true
+        - addr: "https://cloudflare-dns.com/dns-query"
+          dial_addr: "2606:4700:4700::1001"
+          trusted: true
+          enable_http3: true
+        - addr: "https://cloudflare-dns.com/dns-query"
+          dial_addr: "2606:4700:4700::1111"
+          trusted: true
+          enable_http3: true
 
   # doq backup resolver
   - tag: "adguard_quic"
     type: forward
     args:
       upstream:
-      - addr: "quic://dns-unfiltered.adguard.com" # DoQ server
-        ip_addr: # server addresses
-        - "94.140.14.14"
-        - "94.140.15.15"
-        - "2a10:50c0::ad1:ff"
-        - "2a10:50c0::ad2:ff"
-        trusted: true
+        - addr: "quic://dns-unfiltered.adguard.com" # DoQ server
+          ip_addr: # server addresses
+            - "94.140.14.14"
+            - "94.140.15.15"
+            - "2a10:50c0::ad1:ff"
+            - "2a10:50c0::ad2:ff"
+          trusted: true
 
   # --- query matcher --- #
   # query - hosts domains
@@ -343,79 +343,79 @@ plugins:
     type: hosts
     args:
       hosts:
-      - "provider:hosts"
+        - "provider:hosts"
 
   # query - redirect domains
   - tag: "query_is_redirect_domain"
     type: redirect
     args:
       rule:
-      - provider:redirect
+        - provider:redirect
 
   # query - local domains
   - tag: "query_is_local_domain"
     type: query_matcher
     args:
       domain:
-      - "homelab.sh"
+        - "homelab.sh"
 
   # query - direct domains
   - tag: "query_is_direct_domain"
     type: query_matcher
     args:
       domain:
-      - "provider:direct"
+        - "provider:direct"
 
   # query - reject domains
   - tag: "query_is_reject_domain"
     type: query_matcher
     args:
       domain:
-      - "provider:reject"
+        - "provider:reject"
 
   # query - CN domains
   - tag: "query_is_cn_domain"
     type: query_matcher
     args:
       domain:
-      - "provider:geosite:cn"
+        - "provider:geosite:cn"
 
   # query - non-CN domains
   - tag: "query_is_non_cn_domain"
     type: query_matcher
     args:
       domain:
-      - "provider:geosite:geolocation-!cn"
-      - "provider:geosite:gfw"
-      - "provider:geosite:google-scholar"
-      - "provider:geosite:category-scholar-!cn"
-      - "provider:geosite:icloud@cn"
-      - "provider:geosite:apple@cn"
-      - "provider:geosite:github"
-      - "provider:geosite:twitter"
-      - "provider:geosite:telegram"
-      - "provider:geosite:google"
-      
+        - "provider:geosite:geolocation-!cn"
+        - "provider:geosite:gfw"
+        - "provider:geosite:google-scholar"
+        - "provider:geosite:category-scholar-!cn"
+        - "provider:geosite:icloud@cn"
+        - "provider:geosite:apple@cn"
+        - "provider:geosite:github"
+        - "provider:geosite:twitter"
+        - "provider:geosite:telegram"
+        - "provider:geosite:google"
+
   # query - custom domains
   - tag: "query_is_custom_domain"
     type: query_matcher
     args:
       domain:
-      - "keyword:linkedin"
+        - "keyword:linkedin"
 
   # query - ads
   - tag: "query_is_ad_domain"
     type: query_matcher
     args:
       domain:
-      - "provider:geosite:category-ads-all"
+        - "provider:geosite:category-ads-all"
 
   # response - CN ip
   - tag: "response_has_cn_ip"
     type: response_matcher
     args:
       ip:
-      - "provider:geoip:cn"
+        - "provider:geoip:cn"
 
   # --- resolver --- #
   # domestic resolver
@@ -464,13 +464,13 @@ plugins:
 
         - if: query_is_local_domain
           exec:
-          - local_resolver
-          - _return # end
+            - local_resolver
+            - _return # end
 
         - if: query_is_reject_domain || query_is_ad_domain
           exec:
-          - _new_nxdomain_response # empty response
-          - _return
+            - _new_nxdomain_response # empty response
+            - _return
 
         # - mem_cache
         - reverse_lookup
@@ -479,27 +479,26 @@ plugins:
 
         - if: query_is_cn_domain
           exec:
-          - domestic_resolver
-          - if: "response_has_cn_ip" # cnip as result
-            exec:
-              - _return # end
+            - domestic_resolver
+            - if: "response_has_cn_ip" # cnip as result
+              exec:
+                - _return # end
 
         - if: query_is_non_cn_domain || query_is_custom_domain
           exec:
-          - remote_resolver
-          - if: "!response_has_cn_ip"  # noncnip as result
-            exec:
-              - _return # end
-    
+            - remote_resolver
+            - if: "!response_has_cn_ip" # noncnip as result
+              exec:
+                - _return # end
+
         # exec only when none of the above conditions matches
         - primary:
-          - domestic_resolver
-          - if: "response_has_cn_ip"
-            exec:
-            - _drop_response
+            - domestic_resolver
+            - if: "response_has_cn_ip"
+              exec:
+                - _drop_response
           secondary:
-          - remote_resolver
+            - remote_resolver
           stat_length: 10
           threshold: 5
           fast_fallback: 200
-

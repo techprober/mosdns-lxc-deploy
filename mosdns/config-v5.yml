@@ -1,0 +1,71 @@
+plugins:
+  - tag: domain_reject
+    type: domain_set
+    args:
+      files:
+        - /etc/mosdns/reject-list.txt
+
+  - tag: domain_direct
+    type: domain_set
+    args:
+      files:
+        - /etc/mosdns/direct-list.txt
+
+  - tag: ali
+    type: forward
+    args:
+      upstreams:
+        - addr: https://dns.alidns.com/dns-query
+          dial_addr: 223.5.5.5
+          enable_pipeline: true
+        - addr: tls://dns.alidns.com:853
+          dial_addr: 223.5.5.5
+          enable_pipeline: true
+
+  - tag: google
+    type: forward
+    args:
+      upstreams:
+        - addr: https://dns.google/dns-query
+          dial_addr: 8.8.8.8
+          enable_pipeline: true
+        - addr: tls://dns.google:853
+          dial_addr: 8.8.8.8
+          enable_pipeline: true
+
+  - tag: seq_reject
+    type: sequence
+    args:
+      - exec: reject
+
+  - tag: seq_inside
+    type: sequence
+    args:
+      - exec: $ali
+
+  - tag: seq_outside
+    type: sequence
+    args:
+      - exec: $google
+
+  - tag: main
+    type: sequence
+    args:
+      - exec: cache
+      - exec: prefer_ipv4
+
+      - matches:
+          - "qname $domain_reject"
+        exec: goto seq_reject
+
+      - matches:
+          - "qname $domain_direct"
+        exec: goto seq_inside
+
+      - exec: goto seq_outside
+
+  - tag: udp
+    type: udp_server
+    args:
+      entry: main
+      listen: :53

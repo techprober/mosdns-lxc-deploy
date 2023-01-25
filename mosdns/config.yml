@@ -13,7 +13,7 @@ data_providers:
   - tag: geosite
     file: "/etc/mosdns/geosite.dat"
     auto_reload: false
-    
+
 # api config
 api:
   http: ":8080"
@@ -67,7 +67,7 @@ plugins:
   #     lazy_cache_ttl: 86400 # lazy cache ttl
   #     lazy_cache_reply_ttl: 30 # timeout ttl
   #     cache_everything: true
-  
+
   - tag: "redis_cache"
     type: "cache"
     args:
@@ -390,7 +390,7 @@ plugins:
                 - _return # end
 
         # other condition
-        - primary: 
+        - primary:
             - _prefer_ipv4
             - _pad_query
             - remote
