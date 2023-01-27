@@ -16,16 +16,16 @@ data_providers:
 
   # customizable list
   - tag: hosts
-    file: /etc/mosdns/hosts.txt
+    file: /etc/mosdns/rules/hosts.txt
     auto_reload: true
   - tag: direct
-    file: /etc/mosdns/direct.txt
+    file: /etc/mosdns/rules/direct.txt
     auto_reload: true
   - tag: reject
-    file: /etc/mosdns/reject.txt
+    file: /etc/mosdns/rules/reject.txt
     auto_reload: true
   - tag: redirect
-    file: /etc/mosdns/redirect.txt
+    file: /etc/mosdns/rules/redirect.txt
     auto_reload: true
 
 # api config
