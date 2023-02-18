@@ -38,7 +38,7 @@ mkdir -p /etc/mosdns
 
 ### Preparation
 
-Make sure you have the following file structure present in your host:
+Make sure you have the following file structure present on your host:
 
 ```
 # /etc/mosdns
