@@ -24,6 +24,20 @@ Maintainer: [ Kevin Yu (@yqlbu) ](https://github.com/yqlbu)
 - [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat) - Enhanced edition of V2Ray rules dat files, compatible with Xray-core, Shadowsocks-windows, Trojan-Go and leaf.
 - [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip) - Enhanced edition of GeoIP files for V2Ray, Xray-core, Trojan-Go, Clash and Leaf, with replaced CN IPv4 CIDR available from ipip.net, appended CIDR lists and more.
 
+## Project structure
+
+```
+./
+|-- cache.dump
+|-- config.yml
+|-- custom
+|-- domains
+|-- downloads
+`-- ips
+
+4 directories, 2 files
+```
+
 ## Documentation
 
 Mosdns Official Wiki: https://irine-sistiana.gitbook.io/mosdns-wiki/
@@ -37,3 +51,11 @@ Please checkout the [blog post](https://www.hikariai.net/blog/26-mosdns-the-next
 To enhance the ad-free feature, we've added additional `AdBlockList` to our self-managed `geoip.dat` and `geosite.ip`
 
 Please check out more details in [TechProber/v2ray-rules-dat](https://github.com/TechProber/v2ray-rules-dat).
+
+## Appendix
+
+- Auto generate `geoip.txt`, `geosites.txt` (since `*.dat` are deprecated in v5) - https://github.com/techprober/v2dat
+
+- CI (automate `*.txt export`) - https://github.com/techprober/v2ray-rules-dat/blob/master/.github/workflows/run.yml
+
+- Available Rules - https://github.com/techprober/v2ray-rules-dat/releases
