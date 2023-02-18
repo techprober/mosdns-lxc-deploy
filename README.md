@@ -28,6 +28,8 @@ Maintainer: [ Kevin Yu (@yqlbu) ](https://github.com/yqlbu)
 
 Mosdns Official Wiki: https://irine-sistiana.gitbook.io/mosdns-wiki/
 
+Know DNS Providers: https://adguard-dns.io/kb/general/dns-providers/
+
 ## How to Use
 
 Create a new directory for mosdns:
