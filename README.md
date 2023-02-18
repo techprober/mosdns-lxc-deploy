@@ -96,7 +96,7 @@ systemctl restart systemd-resolved
 
 ## CN Users
 
-To enhance the ad-free feature, we've added additional `AdBlockList` to our self-managed `geoip.dat` and `geosite.ip`
+To enhance the ad-free feature, we've added additional `AdBlockList` to our self-managed `geoip.dat` and `geosite.dat`
 
 Please check out more details in [TechProber/v2ray-rules-dat](https://github.com/TechProber/v2ray-rules-dat).
 
