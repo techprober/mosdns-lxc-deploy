@@ -1,0 +1,4 @@
+full:hellofontpreview.oss-cn-beijing.aliyuncs.com
+full:hellowebfonts.oss-cn-beijing.aliyuncs.com
+hellofont.cn
+hellowebfont.com
