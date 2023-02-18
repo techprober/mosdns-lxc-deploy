@@ -52,7 +52,7 @@ plugins:
         #   insecure_skip_verify: true
 
         - tag: cloudflare_dot
-          addr: tls://1.1.1.1
+          addr: tls://1.1.1.1/dns-query
           enable_pipeline: true
           idle_timeout: 50
           insecure_skip_verify: true
