@@ -30,10 +30,80 @@ Mosdns Official Wiki: https://irine-sistiana.gitbook.io/mosdns-wiki/
 
 ## How to Use
 
-Please checkout the [blog post](https://www.hikariai.net/blog/26-mosdns-the-next-generation-dns-resolver/#sample-configuration) to know more in details.
+Create a new directory for mosdns:
+
+```
+mkdir -p /etc/mosdns
+```
+
+### Preparation
+
+Make sure you have the following file structure present in your host:
+
+```
+# /etc/mosdns
+./
+|-- cache.dump
+|-- config.yml
+|-- custom
+|-- domains
+|-- downloads
+`-- ips
+
+4 directories, 2 files
+```
+
+There is a dedicated `bootstrap playbook` to automate this, [check it out](./playbooks/auto-artifact-export.yml).
+
+### Rules
+
+Available Rules - https://github.com/techprober/v2ray-rules-dat/releases
+
+Download and unzip the `geoip.zip` and `geosite.zip` files to `./ips/` and `./domains` respectively.
+
+```bash
+LATEST_TAG=$(curl https://api.github.com/repos/techprober/v2ray-rules-dat/releases/latest --silent |  jq -r ".tag_name)
+curl -L -o /etc/mosdns/ips/geoip.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geoip.zip
+curl -L -o /etc/mosdns/ips/geosites.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geosites.zip
+```
+
+### Reset Port 53
+
+```bash
+mkdir -p /etc/systemd/resolved.conf.d
+
+# /etc/systemd/resolved.conf.d/mosdns.conf
+[Resolve]
+DNS=127.0.0.1
+DNSStubListener=no
+```
+
+Specifying `127.0.0.1` as DNS server address is necessary because otherwise the nameserver will be `127.0.0.53` which doesn’t work without DNSStubListener.
+
+Activate another resolv.conf file:
+
+```bash
+sudo mv /etc/resolv.conf /etc/resolv.conf.backup
+sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
+```
+
+Restart DNSStubListener:
+
+```bash
+systemctl daemon-reload
+systemctl restart systemd-resolved
+```
 
 ## CN Users
 
 To enhance the ad-free feature, we've added additional `AdBlockList` to our self-managed `geoip.dat` and `geosite.ip`
 
 Please check out more details in [TechProber/v2ray-rules-dat](https://github.com/TechProber/v2ray-rules-dat).
+
+## Appendix
+
+- Auto generate `geoip.txt`, `geosites.txt` (since `*.dat` are deprecated in v5) - https://github.com/techprober/v2dat
+
+- CI (automate `*.txt export`) - https://github.com/techprober/v2ray-rules-dat/blob/master/.github/workflows/run.yml
+
+- Available Rules - https://github.com/techprober/v2ray-rules-dat/releases

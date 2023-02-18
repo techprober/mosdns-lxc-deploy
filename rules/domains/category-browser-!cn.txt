@@ -1,0 +1,10 @@
+chrome
+chrome.com
+chromium.org
+brave.com
+bromite.org
+opera.com
+vivaldi.com
+waterfox.net
+firefox.com
+firefoxusercontent.com

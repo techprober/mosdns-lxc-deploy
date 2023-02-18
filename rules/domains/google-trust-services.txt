@@ -1,0 +1,6 @@
+full:clients1.google.com
+full:pki.google.com
+pki.goog
+full:crl.pki.goog
+full:ocsp.pki.goog
+full:pki-goog.l.google.com

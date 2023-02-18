@@ -1,0 +1,3 @@
+iadsdk.apple.com
+iad.apple.com
+qwapi.com
