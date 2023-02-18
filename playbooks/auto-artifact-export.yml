@@ -13,11 +13,11 @@
     - name: Check prerequisites
       block:
         - name: Gather package facts
-          package_facts:
+          ansible.bultin.package_facts:
             manager: apt
 
         - name: Install jq if jq is absent
-          apt:
+          ansible.builtin.apt:
             name: jq
             state: present
           when: '"jq" not in ansible_facts.packages'
@@ -29,7 +29,7 @@
           when: '"unzip" not in ansible_facts.packages'
 
         - name: Create project directories if not exist
-          file:
+          ansible.builtin.file:
             path: "{{ item }}"
             state: directory
             mode: 0755
@@ -39,12 +39,18 @@
             - "{{ base_path }}/custom"
             - "{{ base_path }}/downloads"
 
+        - name: Create cache file if not exist
+          ansible.builtin.file:
+            path: "{{ base_path }}/cache.dump"
+            state: file
+            mode: 0755
+
     - name: Get latest release tag
       shell: 'curl https://api.github.com/repos/techprober/v2ray-rules-dat/releases/latest --silent |  jq -r ".tag_name"'
       register: latest_release
 
     - name: Print result
-      debug:
+      ansible.builtin.debug:
         msg: |
           "release_url: https://github.com/techprober/v2ray-rules-dat/releases/tag/{{ latest_release.stdout }}"
 

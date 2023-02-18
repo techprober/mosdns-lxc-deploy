@@ -28,27 +28,27 @@ plugins:
       upstreams:
         ## --- Domestic DNS Servers --- ##
         - tag: ali_dot
-          addr: tls://223.5.5.5
+          addr: tls://223.5.5.5/dns-query
           enable_pipeline: true
-          idle_timeout: 50
+          idle_timeout: 10
           insecure_skip_verify: true
         # - tag: ali_doh
         #   addr: https://223.5.5.5/dns-query
         #   enable_pipeline: true
         #   enable_pipeline: true
-        #   idle_timeout: 50
+        #   idle_timeout: 30
         #   insecure_skip_verify: true
 
         ##  --- Remote DNS Servers --- ##
         - tag: google_dot
-          addr: tls://8.8.8.8
+          addr: tls://8.8.8.8/dns-query
           enable_pipeline: true
-          idle_timeout: 50
+          idle_timeout: 10
           insecure_skip_verify: true
         # - tag: google_doh
         #   addr: https://8.8.8.8/dns-query
         #   enable_pipeline: true
-        #   idle_timeout: 50
+        #   idle_timeout: 30
         #   insecure_skip_verify: true
 
         - tag: cloudflare_dot
