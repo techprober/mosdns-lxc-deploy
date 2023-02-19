@@ -54,7 +54,7 @@ plugins:
         - tag: cloudflare_dot
           addr: tls://1.1.1.1/dns-query
           enable_pipeline: true
-          idle_timeout: 50
+          idle_timeout: 10
           insecure_skip_verify: true
         # - tag: cloudflare_doh
         #   addr: https://1.1.1.1/dns-query
