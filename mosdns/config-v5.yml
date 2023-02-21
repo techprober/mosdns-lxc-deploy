@@ -111,7 +111,8 @@ plugins:
         exec: reject 0
 
       - exec: $custom_cache # enable cache
-      - {matches: has_resp, exec: accept} # end if reponse found in cache
+      - matches: has_resp
+        exec: accept # end if reponse found in cache
 
       # - matches:
       #     - qname &./custom/remote.txt # custom remote domains
