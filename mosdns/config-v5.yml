@@ -17,7 +17,7 @@ plugins:
     type: cache
     args:
       size: 10240
-      lazy_cache_ttl: 86400 # ttl set to 1 day
+      lazy_cache_ttl: 0 # ttl set to 86400 (1 day) or to 0 (off)
       dump_file: ./cache.dump # persist cache to a local file, loaded when service starts
       dump_interval: 120 # autosave interval (s)
 
