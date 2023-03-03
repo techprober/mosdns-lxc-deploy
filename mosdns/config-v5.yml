@@ -104,6 +104,7 @@ plugins:
     type: sequence
     args:
       - exec: query_summary entry
+      - exec: metrics_controller metrics # prometheus & grafana usage
       - exec: prefer_ipv4 # prefer ipv4 for remote
 
       - matches: qtype 12
