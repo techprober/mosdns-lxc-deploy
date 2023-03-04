@@ -141,6 +141,8 @@ plugins:
           - qname &./domains/telegram.txt
           - qname &./domains/google.txt
         exec: goto remote_seq
+        
+      - exec: ttl 300-3600
 
       - exec: $fallback_ip # use ip to split the rest domains
 
