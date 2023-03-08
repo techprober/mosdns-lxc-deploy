@@ -71,14 +71,16 @@ plugins:
   ## --- Domestic Sequence --- ##
   - tag: domestic_seq
     type: sequence
-    args: 
+    args:
       - exec: $upstreams ali_dot
+      - exec: ttl 300
 
   ## --- Remote Sequence --- ##
   - tag: remote_seq
     type: sequence
-    args: 
+    args:
       - exec: $upstreams google_dot
+      - exec: ttl 300
 
   ## --- CN-IP Sequence --- ##
   # if response does NOT has CN IP, drop it
@@ -141,8 +143,6 @@ plugins:
           - qname &./domains/telegram.txt
           - qname &./domains/google.txt
         exec: goto remote_seq
-        
-      - exec: ttl 300-3600
 
       - exec: $fallback_ip # use ip to split the rest domains
 
