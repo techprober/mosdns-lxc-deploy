@@ -133,7 +133,6 @@ plugins:
       # - matches:
       #     - qname &./custom/remote.txt # custom remote domains
       #   exec: goto remote_seq
-      # - exec: goto ttl_seq
 
       - matches:
           - qname &./domains/direct.txt # cn domains
