@@ -73,14 +73,12 @@ plugins:
     type: sequence
     args:
       - exec: $upstreams ali_dot
-      - exec: ttl 300
 
   ## --- Remote Sequence --- ##
   - tag: remote_seq
     type: sequence
     args:
       - exec: $upstreams google_dot
-      - exec: ttl 300
 
   ## --- CN-IP Sequence --- ##
   # if response does NOT has CN IP, drop it
@@ -91,7 +89,14 @@ plugins:
       - matches: "!resp_ip &ips/cn.txt"
         exec: drop_resp
 
-  ## --- Fallback --- ###
+  ## -- TTL Sequence -- ##
+  - tag: "ttl_seq"
+    type: sequence
+    args:
+      - exec: ttl 600-3600
+      - exec: accept
+
+  ## --- Fallback --- ##
   # (ip split) if response has CN ip, accept it; otherwise, drop --> forward it to remote upstream servers
   - tag: fallback_ip
     type: fallback
@@ -126,11 +131,13 @@ plugins:
       # - matches:
       #     - qname &./custom/remote.txt # custom remote domains
       #   exec: goto remote_seq
+      # - exec: goto ttl_seq
 
       - matches:
           - qname &./domains/direct.txt # cn domains
           - qname &./domains/cn.txt 
         exec: goto domestic_seq
+      - exec: goto ttl_seq
 
       - matches:
           - qname &./domains/geolocation-!cn.txt # non-cn domains
@@ -143,6 +150,7 @@ plugins:
           - qname &./domains/telegram.txt
           - qname &./domains/google.txt
         exec: goto remote_seq
+      - exec: goto ttl_seq
 
       - exec: $fallback_ip # use ip to split the rest domains
 
