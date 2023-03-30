@@ -59,6 +59,7 @@ create sub directories
 
 ```bash
 mkdir -p /etc/mosdns/{ips,domains,downloads,custom}
+touch cache.dump
 ```
 
 > **Note** There is a dedicated `bootstrap playbook` to automate this, [check it out](./playbooks/auto-artifact-export.yml).
