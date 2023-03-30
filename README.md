@@ -72,7 +72,7 @@ curl -L -o mosdns.zip https://github.com/IrineSistiana/mosdns/releases/download/
 # e.g
 # curl -L -o mosdns.zip https://github.com/IrineSistiana/mosdns/releases/download/v5.1.3/mosdns-linux-amd64.zip
 unzip mosdns-linux-amd64.zip
-sudo install -Dm755 mosdns /usr/local/bin
+sudo install -Dm755 mosdns /usr/bin
 ```
 
 ### Download Rules
