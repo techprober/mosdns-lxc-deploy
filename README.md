@@ -84,8 +84,11 @@ Download and unzip the `geoip.zip` and `geosite.zip` files to `./ips/` and `./do
 
 ```bash
 LATEST_TAG=$(curl https://api.github.com/repos/techprober/v2ray-rules-dat/releases/latest --silent |  jq -r ".tag_name)
-curl -L -o /etc/mosdns/ips/geoip.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geoip.zip
-curl -L -o /etc/mosdns/domains/geosites.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geosites.zip
+cd /etc/mosdns
+wget -O ./downloads/geoip.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geoip.zip
+wget -O downloads/geosite.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geosite.zip
+unzip ./downloads/geoip.zip -d ./ips
+unzip ./downloads/geosite.zip -d ./domains
 ```
 
 ### Reset Port 53
