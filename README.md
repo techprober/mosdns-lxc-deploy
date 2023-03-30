@@ -69,9 +69,9 @@ touch cache.dump
 Download the latest mosdns binary from the [GitHub Release](https://github.com/IrineSistiana/mosdns/releases) Page
 
 ```bash
-curl -L -o mosdns.zip https://github.com/IrineSistiana/mosdns/releases/download/{VERSION}/mosdns-{PLATFORM}-{ARCH}.zip
+wget https://github.com/IrineSistiana/mosdns/releases/download/{VERSION}/mosdns-{PLATFORM}-{ARCH}.zip
 # e.g
-# curl -L -o mosdns.zip https://github.com/IrineSistiana/mosdns/releases/download/v5.1.3/mosdns-linux-amd64.zip
+# wget https://github.com/IrineSistiana/mosdns/releases/download/v5.1.3/mosdns-linux-amd64.zip
 unzip mosdns-linux-amd64.zip
 sudo install -Dm755 mosdns /usr/bin
 ```
