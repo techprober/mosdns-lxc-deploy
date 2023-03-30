@@ -55,9 +55,27 @@ Make sure you have the following file structure present on your host:
 4 directories, 2 files
 ```
 
-There is a dedicated `bootstrap playbook` to automate this, [check it out](./playbooks/auto-artifact-export.yml).
+create sub directories
 
-### Rules
+```bash
+mkdir -p /etc/mosdns/{ips,domains,downloads,custom}
+```
+
+> **Note** There is a dedicated `bootstrap playbook` to automate this, [check it out](./playbooks/auto-artifact-export.yml).
+
+### Download Binary
+
+Download the latest mosdns binary from the [GitHub Release](https://github.com/IrineSistiana/mosdns/releases) Page
+
+```bash
+curl -L -o mosdns.zip https://github.com/IrineSistiana/mosdns/releases/download/{VERSION}/mosdns-{PLATFORM}-{ARCH}.zip
+# e.g
+curl -L -o https://github.com/IrineSistiana/mosdns/releases/download/v5.1.3/mosdns-linux-amd64.zip
+unzip mosdns-linux-amd64.zip
+sudo install -Dm755 mosdns /usr/local/bin
+```
+
+### Download Rules
 
 Available Rules - https://github.com/techprober/v2ray-rules-dat/releases
 
@@ -94,6 +112,36 @@ Restart DNSStubListener:
 ```bash
 systemctl daemon-reload
 systemctl restart systemd-resolved
+```
+
+### Update Configuration
+
+Get the latest config file, namely `config-{VERSION}.yml`, from `./mosdns` folder in this repository, copy it to `/etc/mosdns`, and update params to fit your need.
+
+### Run as Systemd Service
+
+```bash
+sudo tee /etc/systemd/system/mosdns.service <<EOF
+[Unit]
+Description=A DNS forwarder
+ConditionFileIsExecutable=/usr/bin/mosdns
+
+[Service]
+StartLimitInterval=5
+StartLimitBurst=10
+ExecStart=/usr/bin/mosdns "start" "--as-service" "-d" "/etc/mosdns" "-c" "/etc/mosdns/config.yml"
+
+Restart=always
+
+RestartSec=120
+EnvironmentFile=-/etc/sysconfig/mosdns
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable mosdns --now
 ```
 
 ## CN Users
