@@ -83,12 +83,12 @@ Available Rules - https://github.com/techprober/v2ray-rules-dat/releases
 Download and unzip the `geoip.zip` and `geosite.zip` files to `./ips/` and `./domains` respectively.
 
 ```bash
+MOSDNS_PATH=/etc/mosdns
 LATEST_TAG=$(curl https://api.github.com/repos/techprober/v2ray-rules-dat/releases/latest --silent |  jq -r ".tag_name)
-cd /etc/mosdns
-wget -O ./downloads/geoip.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geoip.zip
-wget -O ./downloads/geosite.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geosite.zip
-unzip ./downloads/geoip.zip -d ./ips
-unzip ./downloads/geosite.zip -d ./domains
+wget -O $MOSDNS_PATH/downloads/geoip.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geoip.zip
+wget -O $MOSDNS_PATH/downloads/geosite.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geosite.zip
+unzip $MOSDNS_PATH/downloads/geoip.zip -d ./ips
+unzip $MOSDNS_PATH/downloads/geosite.zip -d ./domains
 ```
 
 ### Reset Port 53
