@@ -13,10 +13,10 @@ Deploy mosdns in Proxmox LXC Container
 
 ## Project Owner
 
-CopyRight 2021-2022 @TechProber. All rights reserved.
+CopyRight 2021-2023 @TechProber. All rights reserved.
 
 Maintainer: [ Kevin Yu (@yqlbu) ](https://github.com/yqlbu)
-
+https://github.com/techprober/mosdns-lxc-deploy/blob/master/README.md
 ## Related Projects
 
 - [IrineSistiana/mosdns](https://github.com/IrineSistiana/mosdns) - A self-hosted DNS resolver
