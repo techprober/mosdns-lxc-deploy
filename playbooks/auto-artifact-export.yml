@@ -13,7 +13,7 @@
     - name: Check prerequisites
       block:
         - name: Gather package facts
-          ansible.bultin.package_facts:
+          ansible.builtin.package_facts:
             manager: apt
 
         - name: Install jq if jq is absent
@@ -22,6 +22,12 @@
             state: present
           when: '"jq" not in ansible_facts.packages'
 
+        - name: Install curl if curl is absent
+          ansible.builtin.apt:
+            name: curl
+            state: present
+          when: '"curl" not in ansible_facts.packages'
+          
         - name: Install unzip if unzip is absent
           apt:
             name: unzip
