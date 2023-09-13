@@ -196,7 +196,7 @@ plugins:
       - matches: "qname $direct_domain_set"
         exec: goto domestic_sequence
 
-      - exec: $fallback # not recommended to use unless you know what you are doing
+      - exec: $fallback
 
   - tag: udp_server
     type: udp_server
