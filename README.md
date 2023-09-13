@@ -5,8 +5,7 @@ Deploy mosdns in Proxmox LXC Container
 <p align="center">
     <img src="https://custom-icon-badges.herokuapp.com/github/license/TechProber/mosdns-lxc-deploy?logo=law&color=white" alt="License"/>
     <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FTechProber%2Fmosdns-lxc-deploy&count_bg=%235322B2&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/>
-    <img src="https://custom-icon-badges.herokuapp.com/badge/redis-v7.0.4-red.svg?logo=redis&logoColor=white" alt="Docker">
-    <img src="https://custom-icon-badges.herokuapp.com/badge/docker-v20.10-blue.svg?logo=docker&logoColor=white" alt="Docker">
+      <img src="https://custom-icon-badges.herokuapp.com/github/v/release/IrineSistiana/mosdns?logo=rocket" alt="version">
     <img src="https://custom-icon-badges.herokuapp.com/github/issues-pr-closed/TechProber/mosdns-lxc-deploy?color=purple&logo=git-pull-request&logoColor=white"/>
     <img src="https://custom-icon-badges.herokuapp.com/github/last-commit/TechProber/mosdns-lxc-deploy?logo=history&logoColor=white" alt="lastcommit"/>
 </p>
