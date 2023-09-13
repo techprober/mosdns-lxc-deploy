@@ -17,6 +17,7 @@ CopyRight 2021-2023 @TechProber. All rights reserved.
 
 Maintainer: [ Kevin Yu (@yqlbu) ](https://github.com/yqlbu)
 https://github.com/techprober/mosdns-lxc-deploy/blob/master/README.md
+
 ## Related Projects
 
 - [IrineSistiana/mosdns](https://github.com/IrineSistiana/mosdns) - A self-hosted DNS resolver
@@ -55,7 +56,7 @@ Make sure you have the following file structure present on your host:
 4 directories, 2 files
 ```
 
-create sub directories
+Create sub directories
 
 ```bash
 mkdir -p /etc/mosdns/{ips,domains,downloads,custom}
@@ -131,14 +132,14 @@ Description=A DNS forwarder
 ConditionFileIsExecutable=/usr/bin/mosdns
 
 [Service]
+WorkingDirectory=/etc/mosdns
+Type==notify
+User=root
 StartLimitInterval=5
 StartLimitBurst=10
-ExecStart=/usr/bin/mosdns "start" "--as-service" "-d" "/etc/mosdns" "-c" "/etc/mosdns/config.yml"
-
-Restart=always
-
+ExecStart=/usr/bin/mosdns start -c config.yml
+Restart=abnormal
 RestartSec=120
-EnvironmentFile=-/etc/sysconfig/mosdns
 
 [Install]
 WantedBy=multi-user.target
