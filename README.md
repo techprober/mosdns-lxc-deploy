@@ -88,8 +88,8 @@ MOSDNS_PATH=/etc/mosdns
 LATEST_TAG=$(curl https://api.github.com/repos/techprober/v2ray-rules-dat/releases/latest --silent |  jq -r ".tag_name)
 wget -O $MOSDNS_PATH/downloads/geoip.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geoip.zip
 wget -O $MOSDNS_PATH/downloads/geosite.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geosite.zip
-unzip $MOSDNS_PATH/downloads/geoip.zip -d ./ips
-unzip $MOSDNS_PATH/downloads/geosite.zip -d ./domains
+unzip $MOSDNS_PATH/downloads/geoip.zip -d ./ips/
+unzip $MOSDNS_PATH/downloads/geosite.zip -d ./domains/
 ```
 
 ### Reset Port 53
