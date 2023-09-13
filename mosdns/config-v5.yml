@@ -17,9 +17,9 @@ plugins:
     type: cache
     args:
       size: 10240
-      lazy_cache_ttl: 0 # ttl set to 86400 (1 day) or to 0 (off)
+      lazy_cache_ttl: 86400 # ttl set to 86400 (1 day) or to 0 (off)
       dump_file: ./cache.dump # persist cache to a local file, loaded when service starts
-      dump_interval: 120 # autosave interval (s)
+      dump_interval: 600 # autosave interval (s)
 
   ## --- Domain Set --- ##
   - tag: "local_domain_set"
@@ -151,13 +151,13 @@ plugins:
         exec: goto domestic_sequence
       - exec: goto ttl_sequence
 
-  ## --- Direct IP Sequence --- ##
-  # if response does NOT has Direct IP, drop it
+  ## --- Fallback IP Sequence --- ##
+  # if response has direct IP, drop it
   - tag: "direct_ip_sequence"
     type: sequence
     args:
-      - exec: goto domestic_sequence 
-      - matches: "!resp_ip $direct_ip"
+      - exec: goto remote_sequence
+      - matches: "resp_ip $direct_ip"
         exec: drop_resp
   
   ## --- Fallback --- ##
@@ -196,7 +196,7 @@ plugins:
       - matches: "qname $direct_domain_set"
         exec: goto domestic_sequence
 
-      # - exec: $fallback # not recommended to use unless you know what you are doing
+      - exec: $fallback # not recommended to use unless you know what you are doing
 
   - tag: udp_server
     type: udp_server
