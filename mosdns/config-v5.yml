@@ -4,16 +4,16 @@
 ## -- Log Config -- ##
 log:
   level: debug # ["debug", "info", "warn", and "error"], default is set to "info"
+  production: true
   # file: "/var/log/mosdns.log"
 
 ## -- API Config -- ##
 api:
-  http: "0.0.0.0:8080"
+  http: "0.0.0.0:9999"
 
-## -- Plugins Config -- ##
-plugins:
+plugins: 
   ## --- Cache --- ##
-  - tag: custom_cache
+  - tag: cache
     type: cache
     args:
       size: 10240
@@ -21,141 +21,185 @@ plugins:
       dump_file: ./cache.dump # persist cache to a local file, loaded when service starts
       dump_interval: 120 # autosave interval (s)
 
+  ## --- Domain Set --- ##
+  - tag: "local_domain_set"
+    type: domain_set
+    args:
+      exps:
+        - "homelab.sh"
+
+  - tag: "ads_domain_set"
+    type: domain_set
+    args:
+      files:
+        - "./domains/reject.txt"
+        - "./domains/category-ads-all.txt"
+
+  - tag: "remote_domain_set"
+    type: domain_set
+    args:
+      files:
+        - "./custom/remote.txt"
+        - "./domains/gfw.txt"
+        - "./domains/google-scholar.txt"
+        - "./domains/linkedin.txt"
+        - "./domains/netflix.txt"
+        - "./domains/openai.txt"
+        - "./domains/icloud.txt"
+        - "./domains/apple.txt"
+        - "./domains/apple-cn.txt"
+        - "./domains/twitter.txt"
+        - "./domains/telegram.txt"
+        - "./domains/google.txt"
+        - "./domains/twitter.txt"
+        - "./domains/yahoo.txt"
+        - "./domains/microsoft.txt"
+        - "./domains/cloudflare.txt"
+        - "./domains/cloudflare-cn.txt"
+        - "./domains/speedtest.txt"
+        - "./domains/github.txt"
+        - "./domains/category-container.txt"
+        - "./domains/category-dev.txt"
+        - "./domains/geolocation-!cn.txt"
+        - "./domains/category-scholar-!cn.txt"
+
+  - tag: "direct_domain_set"
+    type: domain_set
+    args:
+      files:
+        - "./custom/direct.txt"
+        - "./domains/alibaba.txt"
+        - "./domains/bilibili.txt"
+        - "./domains/bilibili2.txt"
+        - "./domains/tencent.txt"
+        - "./domains/zhihu.txt"
+        - "./domains/category-scholar-cn.txt"
+        - "./domains/category-media-cn.txt"
+        - "./domains/category-social-media-cn.txt"
+        - "./domains/category-dev-cn.txt"
+        - "./domains/category-bank-cn.txt"
+        - "./domains/direct.txt"
+        - "./domains/cn.txt"
+        - "./domains/geolocation-cn.txt"
+
+  ## --- IP Set --- ##
+  - tag: "direct_ip"
+    type: ip_set
+    args:
+      files:
+        - "./ips/cn.txt"
+
   ## --- Upstream Servers --- ##
-  - tag: upstreams
+  - tag: "local_forward"
     type: forward
     args:
-      upstreams:
-        ## --- Domestic DNS Servers --- ##
+      upstreams: 
+       ## --- Local DNS Servers --- ##
+        - tag: pihole
+          addr: "10.178.0.6"
+
+  - tag: "remote_forward"
+    type: forward
+    args:
+      upstreams: 
+        ##  --- Remote DNS Servers --- ##
+        - tag: opendns_dot
+          addr: "tls://dns.opendns.com"
+          dial_addr: "208.67.222.222"
+          enable_pipeline: true
+          idle_timeout: 86400
+          insecure_skip_verify: true
+
+  - tag: "domestic_forward"
+    type: forward
+    args:
+      upstreams: 
+       ## --- Domestic DNS Servers --- ##
         - tag: ali_dot
-          addr: tls://dns.alidns.com
+          addr: "tls://dns.alidns.com"
           dial_addr: "223.5.5.5"
           enable_pipeline: true
           idle_timeout: 86400
           insecure_skip_verify: true
-        # - tag: ali_doh
-        #   addr: https://dns.alidns.com/dns-query
-        #   dial_addr: "223.5.5.5"
-        #   enable_pipeline: true
-        #   enable_pipeline: true
-        #   idle_timeout: 86400
-        #   insecure_skip_verify: true
-
-        ##  --- Remote DNS Servers --- ##
-        - tag: google_dot
-          addr: tls://dns.google
-          dial_addr: "8.8.8.8"
-          enable_pipeline: true
-          idle_timeout: 86400
-          insecure_skip_verify: true
-        # - tag: google_doh
-        #   addr: https://dns.google/dns-query
-        #   dial_addr: "8.8.8.8"
-        #   enable_pipeline: true
-        #   idle_timeout: 86400
-        #   insecure_skip_verify: true
-
-        - tag: cloudflare_dot
-          addr: tls://1dot1dot1dot1.cloudflare-dns.com
-          dial_addr: "1.1.1.1"
-          enable_pipeline: true
-          idle_timeout: 86400
-          insecure_skip_verify: true
-        # - tag: cloudflare_doh
-        #   addr: https://cloudflare-dns.com/dns-query
-        #   dial_addr: "1.1.1.1"
-        #   enable_pipeline: true
-        #   idle_timeout: 86400
-        #   insecure_skip_verify: true
 
   ## -- TTL Sequence -- ##
-  - tag: "ttl_seq"
+  - tag: "ttl_sequence"
     type: sequence
     args:
       - exec: ttl 600-3600
       - exec: accept
 
-  ## --- Domestic Sequence --- ##
-  - tag: domestic_seq
+  - tag: "local_sequence"
     type: sequence
     args:
-      - exec: $upstreams ali_dot
-      - exec: goto ttl_seq
+      - exec: query_summary local_forward
+      - exec: $local_forward
 
-  ## --- Remote Sequence --- ##
-  - tag: remote_seq
+  - tag: "domestic_sequence"
     type: sequence
     args:
-      - exec: $upstreams google_dot
-      - exec: goto ttl_seq
+      - exec: query_summary domestic_forward
+      - exec: $domestic_forward
+      - exec: goto ttl_sequence
 
-  ## --- CN-IP Sequence --- ##
-  # if response does NOT has CN IP, drop it
-  - tag: cn_ip
+  - tag: "remote_sequence"
     type: sequence
     args:
-      - exec: $upstreams ali_dot
-      - matches: "!resp_ip &ips/cn.txt"
+      - exec: query_summary remote_forward
+      - exec: $remote_forward
+      - matches: "resp_ip $direct_ip"
+        exec: goto domestic_sequence
+      - exec: goto ttl_sequence
+
+  ## --- Direct IP Sequence --- ##
+  # if response does NOT has Direct IP, drop it
+  - tag: "direct_ip_sequence"
+    type: sequence
+    args:
+      - exec: goto domestic_sequence 
+      - matches: "!resp_ip $direct_ip"
         exec: drop_resp
-
+  
   ## --- Fallback --- ##
-  # (ip split) if response has CN ip, accept it; otherwise, drop --> forward it to remote upstream servers
-  - tag: fallback_ip
+  - tag: "fallback"
     type: fallback
     args:
-      primary: cn_ip # empty response
-      secondary: remote_seq
-      threshold: 500 # no response timeout, default value is 500ms
+      primary: direct_ip_sequence
+      secondary: remote_sequence
+      threshold: 500  # no response timeout, default value is 500ms
       always_standby: true
 
   ## --- Main Sequence --- ##
-  - tag: main
+  - tag: "main_sequence"
     type: sequence
     args:
-      - exec: query_summary entry
-      # - exec: metrics_controller metrics # prometheus & grafana usage
-      - exec: prefer_ipv4 # prefer ipv4 for remote
+      - exec: prefer_ipv4
+
+      - matches: "qname $local_domain_set"
+        exec: goto local_sequence
+
+      - exec: $cache # enable cache
+      - matches: has_resp
+        exec: accept # end if reponse found in cache
 
       - matches: qtype 12
         exec: reject 3
       - matches: qtype 65
         exec: reject 3
 
-      - matches:
-          - qname &./domains/category-ads-all.txt # ads
-          - qname &./domains/reject.txt
+      - matches: "qname $ads_domain_set" # block ads
         exec: reject 0
 
-      - exec: $custom_cache # enable cache
-      - matches: has_resp
-        exec: accept # end if reponse found in cache
+      - matches: "qname $remote_domain_set"
+        exec: goto remote_sequence
 
-      # - matches:
-      #     - qname &./custom/remote.txt # custom remote domains
-      #   exec: goto remote_seq
+      - matches: "qname $direct_domain_set"
+        exec: goto domestic_sequence
 
-      - matches:
-          - qname &./domains/direct.txt # cn domains
-          - qname &./domains/cn.txt 
-        exec: goto domestic_seq
+      # - exec: $fallback # not recommended to use unless you know what you are doing
 
-      - matches:
-          - qname &./domains/geolocation-!cn.txt # non-cn domains
-          - qname &./domains/gfw.txt
-          - qname &./domains/google-scholar.txt
-          - qname &./domains/category-scholar-!cn.txt
-          - qname &./domains/icloud.txt
-          - qname &./domains/apple-cn.txt
-          - qname &./domains/twitter.txt
-          - qname &./domains/telegram.txt
-          - qname &./domains/google.txt
-        exec: goto remote_seq
-
-      - exec: $fallback_ip # use ip to split the rest domains
-
-  ## --- Server Configuration --- ##
-  - tag: server
+  - tag: udp_server
     type: udp_server
     args:
-      entry: main
+      entry: main_sequence
       listen: :53
