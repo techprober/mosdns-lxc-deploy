@@ -166,7 +166,7 @@ plugins:
       - exec: metrics_collector remote_forward
       - exec: $remote_forward
       - matches: "resp_ip $direct_ip"
-        exec: goto domestic_sequence
+        exec: $domestic_forward
       - exec: goto ttl_sequence
 
   ## --- Fallback IP Sequence --- ##
@@ -174,7 +174,7 @@ plugins:
   - tag: "direct_ip_sequence"
     type: sequence
     args:
-      - exec: goto remote_sequence
+      - exec: $remote_forward
       - matches: "resp_ip $direct_ip"
         exec: drop_resp
   
