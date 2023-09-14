@@ -16,7 +16,6 @@
 CopyRight 2021-2023 @TechProber. All rights reserved.
 
 Maintainer: [ Kevin Yu (@yqlbu) ](https://github.com/yqlbu)
-https://github.com/techprober/mosdns-lxc-deploy/blob/master/README.md
 
 ## Related Projects
 
