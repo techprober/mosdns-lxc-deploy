@@ -5,7 +5,7 @@
 log:
   level: debug # ["debug", "info", "warn", and "error"], default is set to "info"
   production: true
-  # file: "/var/log/mosdns.log"
+  file: "/var/log/mosdns.log"
 
 ## -- API Config -- ##
 api:
@@ -13,13 +13,21 @@ api:
 
 plugins: 
   ## --- Cache --- ##
-  - tag: cache
+  - tag: "cache"
     type: cache
     args:
       size: 10240
       lazy_cache_ttl: 86400 # ttl set to 86400 (1 day) or to 0 (off)
       dump_file: ./cache.dump # persist cache to a local file, loaded when service starts
       dump_interval: 600 # autosave interval (s)
+
+  ## -- Reverse Lookup -- ##
+  - tag: "reverse_lookup"
+    type: reverse_lookup
+    args:
+      size: 1000 # cache size; default: 65535
+      ttl: 3600 # default 7200 (2h)
+      handle_ptr: true # handle ptr response (ptr -> cache -> response)
 
   ## --- Domain Set --- ##
   - tag: "local_domain_set"
@@ -122,23 +130,32 @@ plugins:
           idle_timeout: 86400
           insecure_skip_verify: true
 
-  ## -- TTL Sequence -- ##
+  ## -- Sequences -- ##
   - tag: "ttl_sequence"
     type: sequence
     args:
       - exec: ttl 600-3600
       - exec: accept
 
+  - tag: "ads_block_sequence"
+    type: sequence
+    args:
+      - exec: query_summary ads_block
+      - exec: metrics_collector ads_block
+      - exec: reject 0
+
   - tag: "local_sequence"
     type: sequence
     args:
       - exec: query_summary local_forward
+      - exec: metrics_collector local_forward
       - exec: $local_forward
 
   - tag: "domestic_sequence"
     type: sequence
     args:
       - exec: query_summary domestic_forward
+      - exec: metrics_collector domestic_forward
       - exec: $domestic_forward
       - exec: goto ttl_sequence
 
@@ -146,6 +163,7 @@ plugins:
     type: sequence
     args:
       - exec: query_summary remote_forward
+      - exec: metrics_collector remote_forward
       - exec: $remote_forward
       - matches: "resp_ip $direct_ip"
         exec: goto domestic_sequence
@@ -178,6 +196,7 @@ plugins:
       - matches: "qname $local_domain_set"
         exec: goto local_sequence
 
+      - exec: $reverse_lookup # enable reverse_lookup
       - exec: $cache # enable cache
       - matches: has_resp
         exec: accept # end if reponse found in cache
@@ -188,7 +207,7 @@ plugins:
         exec: reject 3
 
       - matches: "qname $ads_domain_set" # block ads
-        exec: reject 0
+        exec: goto ads_block_sequence
 
       - matches: "qname $remote_domain_set"
         exec: goto remote_sequence
