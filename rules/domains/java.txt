@@ -1,3 +1,0 @@
-java
-java.com
-java.net

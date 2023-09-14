@@ -1,6 +1,0 @@
-gifshow.com
-ksapisrv.com
-kuaishou.com
-yximgs.com
-full:log-sdk.gifshow.com
-full:wlog.kuaishou.com

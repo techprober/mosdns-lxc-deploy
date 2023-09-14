@@ -1,4 +1,0 @@
-full:fontshop-prod-responsive-images.s3.amazonaws.com
-fontbook.com
-fontshop.com
-fstopimages.com

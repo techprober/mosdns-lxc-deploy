@@ -1,7 +1,0 @@
-booth.pm
-fanbox.cc
-pixiv.net
-pixiv.org
-pixiv.me
-pximg.net
-pixiv.co.jp

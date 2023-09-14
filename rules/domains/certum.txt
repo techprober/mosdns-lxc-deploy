@@ -1,3 +1,0 @@
-certum.pl
-ocsp-certum.com
-ocsp-responder.com

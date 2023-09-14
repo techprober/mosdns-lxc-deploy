@@ -1,5 +1,0 @@
-full:gamedownloads-rockstargames-com.akamaized.net
-full:media-rockstargames-com.akamaized.net
-full:videos-rockstargames-com.akamaized.net
-rockstargames.com
-rsg.sc

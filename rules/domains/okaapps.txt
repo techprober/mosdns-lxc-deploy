@@ -1,2 +1,0 @@
-okaapps.com
-regexp:^(.+\.)*zh\.okaapps\.com$
