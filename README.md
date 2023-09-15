@@ -97,7 +97,7 @@ unzip -o $MOSDNS_PATH/downloads/geosite.zip -d $MOSDNS_PATH/domains
 > Alternatively, you may use a dedicated script to automatically download and extract the geodata artifacts. See [./scripts/geodata-update.sh](./scripts/geodata-update.sh)
 
 ```bash
-curl -L -o /usr/local/etc/mosdns/scripts/geodata-update.sh https://github.com/techprober/mosdns-lxc-deploy/blob/master/scripts/geodata-update.sh
+curl -L -o /usr/local/etc/mosdns/scripts/geodata-update.sh https://github.com/techprober/mosdns-lxc-deploy/raw/master/scripts/geodata-update.sh
 ```
 
 ### Reset Port 53
