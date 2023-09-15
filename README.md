@@ -24,6 +24,23 @@ Maintainer: [ Kevin Yu (@yqlbu) ](https://github.com/yqlbu)
 - [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat) - Enhanced edition of V2Ray rules dat files, compatible with Xray-core, Shadowsocks-windows, Trojan-Go and leaf.
 - [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip) - Enhanced edition of GeoIP files for V2Ray, Xray-core, Trojan-Go, Clash and Leaf, with replaced CN IPv4 CIDR available from ipip.net, appended CIDR lists and more.
 
+## Table of contents
+
+<!-- vim-markdown-toc GFM -->
+
+* [Documentation](#documentation)
+* [How to Use](#how-to-use)
+    * [Preparation](#preparation)
+    * [Download Binary](#download-binary)
+    * [Download Rules](#download-rules)
+    * [Reset Port 53](#reset-port-53)
+    * [Update Configuration](#update-configuration)
+    * [Run as Systemd Service](#run-as-systemd-service)
+* [CN Users](#cn-users)
+* [Appendix](#appendix)
+
+<!-- vim-markdown-toc -->
+
 ## Documentation
 
 Mosdns Official Wiki: https://irine-sistiana.gitbook.io/mosdns-wiki/
