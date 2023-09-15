@@ -32,13 +32,20 @@ Know DNS Providers: https://adguard-dns.io/kb/general/dns-providers/
 
 ## How to Use
 
-Create a new directory for mosdns:
+### Preparation
 
-```
+Create a new directory for mosdns
+
+```bash
 mkdir -p /etc/mosdns
 ```
 
-### Preparation
+Create sub directories
+
+```bash
+mkdir -p /etc/mosdns/{ips,domains,downloads,custom,scripts}
+touch cache.dump
+```
 
 Make sure you have the following file structure present on your host:
 
@@ -50,46 +57,44 @@ Make sure you have the following file structure present on your host:
 |-- custom
 |-- domains
 |-- downloads
+|-- scripts
 `-- ips
 
-4 directories, 2 files
+5 directories, 2 files
 ```
 
-Create sub directories
-
-```bash
-mkdir -p /etc/mosdns/{ips,domains,downloads,custom}
-touch cache.dump
-```
-
-> **Note** There is a dedicated `bootstrap playbook` to automate this, [check it out](./playbooks/auto-artifact-export.yml).
+> [!NOTE]
+> There is a dedicated `bootstrap playbook` to automate this, [check it out](./playbooks/auto-artifact-export.yml).
 
 ### Download Binary
 
 Download the latest mosdns binary from the [GitHub Release](https://github.com/IrineSistiana/mosdns/releases) Page
 
 ```bash
-wget https://github.com/IrineSistiana/mosdns/releases/download/{VERSION}/mosdns-{PLATFORM}-{ARCH}.zip
+MOSDNS_PATH=/etc/mosdns
+curl -o $MOSDNS_PATH/downloads/mosdns.zip https://github.com/IrineSistiana/mosdns/releases/download/{VERSION}/mosdns-{PLATFORM}-{ARCH}.zip
 # e.g
 # wget https://github.com/IrineSistiana/mosdns/releases/download/v5.1.3/mosdns-linux-amd64.zip
-unzip mosdns-linux-amd64.zip
-sudo install -Dm755 mosdns /usr/bin
+unzip $MOSDNS_PATH/downloads/mosdns.zip
+sudo install -Dm755 $MOSDNS_PATH/downloads/mosdns /usr/bin
 ```
 
 ### Download Rules
 
-Available Rules - https://github.com/techprober/v2ray-rules-dat/releases
+Available Rules - <https://github.com/techprober/v2ray-rules-dat/releases>
 
 Download and unzip the `geoip.zip` and `geosite.zip` files to `./ips/` and `./domains` respectively.
 
 ```bash
 MOSDNS_PATH=/etc/mosdns
-LATEST_TAG=$(curl https://api.github.com/repos/techprober/v2ray-rules-dat/releases/latest --silent |  jq -r ".tag_name)
-wget -O $MOSDNS_PATH/downloads/geoip.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geoip.zip
-wget -O $MOSDNS_PATH/downloads/geosite.zip https://github.com/techprober/v2ray-rules-dat/releases/download/$LATEST_TAG/geosite.zip
-unzip $MOSDNS_PATH/downloads/geoip.zip -d ./ips/
-unzip $MOSDNS_PATH/downloads/geosite.zip -d ./domains/
+curl --progress-bar -JL -o $MOSDNS_PATH/downloads/geoip.zip https://github.com/techprober/v2ray-rules-dat/raw/release/geoip.zip
+curl --progress-bar -JL -o $MOSDNS_PATH/downloads/geosite.zip https://github.com/techprober/v2ray-rules-dat/raw/release/geosite.zip
+unzip -o $MOSDNS_PATH/downloads/geoip.zip -d $MOSDNS_PATH/ips
+unzip -o $MOSDNS_PATH/downloads/geosite.zip -d $MOSDNS_PATH/domains
 ```
+
+> [!NOTE]
+> Alternatively, you may use a dedicated script to automatically download and extract the geodata artifacts. See [./scripts/geodata-update.sh](./scripts/geodata-update.sh)
 
 ### Reset Port 53
 
