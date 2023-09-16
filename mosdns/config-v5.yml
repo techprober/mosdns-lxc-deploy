@@ -204,8 +204,6 @@ plugins:
       - matches: has_resp
         exec: accept # end if reponse found in cache
 
-      - matches: qtype 12
-        exec: reject 3
       - matches: qtype 65
         exec: reject 3
 
