@@ -170,22 +170,25 @@ plugins:
       - exec: goto ttl_sequence
 
   ## --- Fallback IP Sequence --- ##
-  # if response has direct IP, drop it
-  - tag: "direct_ip_sequence"
+  # if response has direct IP, forward to domestic upstream
+  - tag: "ip_sequence"
     type: sequence
     args:
+      - exec: query_summary ip_forward
+      - exec: metrics_collector ip_forward
       - exec: $remote_forward
       - matches: "resp_ip $direct_ip"
-        exec: drop_resp
+        exec: $domestic_forward
+      - exec: goto ttl_sequence
   
   ## --- Fallback --- ##
   - tag: "fallback"
     type: fallback
     args:
-      primary: direct_ip_sequence
+      primary: ip_sequence
       secondary: remote_sequence
       threshold: 500  # no response timeout, default value is 500ms
-      always_standby: true
+      always_standby: false # do not use concurrency; if primary fails, exec secondary
 
   ## --- Main Sequence --- ##
   - tag: "main_sequence"
