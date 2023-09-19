@@ -144,12 +144,12 @@ plugins:
       - exec: metrics_collector ads_block
       - exec: reject 0
 
-  - tag: "local_sequence"
-    type: sequence
-    args:
-      - exec: query_summary local_forward
-      - exec: metrics_collector local_forward
-      - exec: $local_forward
+  # - tag: "local_sequence"
+  #   type: sequence
+  #   args:
+  #     - exec: query_summary local_forward
+  #     - exec: metrics_collector local_forward
+  #     - exec: $local_forward
 
   - tag: "domestic_sequence"
     type: sequence
