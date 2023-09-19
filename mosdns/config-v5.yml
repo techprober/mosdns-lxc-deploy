@@ -47,7 +47,7 @@ plugins:
     type: domain_set
     args:
       files:
-        - "./custom/remote.txt"
+        # - "./custom/remote.txt"
         - "./domains/gfw.txt"
         - "./domains/google-scholar.txt"
         - "./domains/linkedin.txt"
@@ -75,7 +75,7 @@ plugins:
     type: domain_set
     args:
       files:
-        - "./custom/direct.txt"
+        # - "./custom/direct.txt"
         - "./domains/alibaba.txt"
         - "./domains/bilibili.txt"
         - "./domains/bilibili2.txt"
@@ -98,13 +98,13 @@ plugins:
         - "./ips/cn.txt"
 
   ## --- Upstream Servers --- ##
-  - tag: "local_forward"
-    type: forward
-    args:
-      upstreams: 
-       ## --- Local DNS Servers --- ##
-        - tag: pihole
-          addr: "10.178.0.6"
+  # - tag: "local_forward"
+  #   type: forward
+  #   args:
+  #     upstreams: 
+  #      ## --- Local DNS Servers --- ##
+  #       - tag: pihole
+  #         addr: "10.178.0.6"
 
   - tag: "remote_forward"
     type: forward
@@ -196,8 +196,8 @@ plugins:
     args:
       - exec: prefer_ipv4
 
-      - matches: "qname $local_domain_set"
-        exec: goto local_sequence
+      # - matches: "qname $local_domain_set"
+      #   exec: goto local_sequence
 
       - exec: $reverse_lookup # enable reverse_lookup
       - exec: $cache # enable cache
