@@ -146,6 +146,9 @@ systemctl restart systemd-resolved
 
 ### Update Configuration
 
+> [!WARNING]
+> Please take a look at the content of `config-{VERSION}.yml` before you copy it to `/etc/mosdns`. It is a boilerplate template which intends to provide users a reference to start with customizing their own config.
+
 Get the latest config file, namely `config-{VERSION}.yml`, from `./mosdns` folder in this repository, copy it to `/etc/mosdns`, and update params to fit your need.
 
 ### Run as Systemd Service

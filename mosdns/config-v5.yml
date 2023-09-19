@@ -98,13 +98,13 @@ plugins:
         - "./ips/cn.txt"
 
   ## --- Upstream Servers --- ##
-  # - tag: "local_forward"
-  #   type: forward
-  #   args:
-  #     upstreams: 
-  #      ## --- Local DNS Servers --- ##
-  #       - tag: pihole
-  #         addr: "10.178.0.6"
+  - tag: "local_forward"
+    type: forward
+    args:
+      upstreams: 
+       ## --- Local DNS Servers --- ##
+        - tag: pihole
+          addr: "10.178.0.6"
 
   - tag: "remote_forward"
     type: forward
@@ -144,12 +144,12 @@ plugins:
       - exec: metrics_collector ads_block
       - exec: reject 0
 
-  # - tag: "local_sequence"
-  #   type: sequence
-  #   args:
-  #     - exec: query_summary local_forward
-  #     - exec: metrics_collector local_forward
-  #     - exec: $local_forward
+  - tag: "local_sequence"
+    type: sequence
+    args:
+      - exec: query_summary local_forward
+      - exec: metrics_collector local_forward
+      - exec: $local_forward
 
   - tag: "domestic_sequence"
     type: sequence
