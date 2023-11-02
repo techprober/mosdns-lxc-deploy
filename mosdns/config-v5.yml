@@ -11,7 +11,7 @@ log:
 api:
   http: "0.0.0.0:9999"
 
-plugins: 
+plugins:
   ## --- Cache --- ##
   - tag: "cache"
     type: cache
@@ -112,8 +112,7 @@ plugins:
       upstreams: 
         ##  --- Remote DNS Servers --- ##
         - tag: opendns_dot
-          addr: "tls://dns.opendns.com"
-          dial_addr: "208.67.222.222"
+          addr: "tls://208.67.222.222"
           enable_pipeline: true
           idle_timeout: 86400
           insecure_skip_verify: true
@@ -124,8 +123,7 @@ plugins:
       upstreams: 
        ## --- Domestic DNS Servers --- ##
         - tag: ali_dot
-          addr: "tls://dns.alidns.com"
-          dial_addr: "223.5.5.5"
+          addr: "tls://223.5.5.5"
           enable_pipeline: true
           idle_timeout: 86400
           insecure_skip_verify: true
