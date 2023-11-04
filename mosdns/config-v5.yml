@@ -198,6 +198,9 @@ plugins:
       #   exec: goto local_sequence
 
       - exec: $reverse_lookup # enable reverse_lookup
+      - matches: has_resp
+        exec: accept # end if reponse found in cache
+
       - exec: $cache # enable cache
       - matches: has_resp
         exec: accept # end if reponse found in cache
