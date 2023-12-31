@@ -75,10 +75,6 @@ plugins:
     type: domain_set
     args:
       files:
-        - "./domains/alibaba.txt"
-        - "./domains/bilibili.txt"
-        - "./domains/bilibili2.txt"
-        - "./domains/tencent.txt"
         - "./domains/zhihu.txt"
         - "./domains/direct.txt"
         - "./domains/cn.txt"
