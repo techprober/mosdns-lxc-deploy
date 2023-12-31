@@ -75,20 +75,13 @@ plugins:
     type: domain_set
     args:
       files:
-        # - "./custom/direct.txt"
         - "./domains/alibaba.txt"
         - "./domains/bilibili.txt"
         - "./domains/bilibili2.txt"
         - "./domains/tencent.txt"
         - "./domains/zhihu.txt"
-        - "./domains/category-scholar-cn.txt"
-        - "./domains/category-media-cn.txt"
-        - "./domains/category-social-media-cn.txt"
-        - "./domains/category-dev-cn.txt"
-        - "./domains/category-bank-cn.txt"
         - "./domains/direct.txt"
         - "./domains/cn.txt"
-        - "./domains/geolocation-cn.txt"
 
   ## --- IP Set --- ##
   - tag: "direct_ip"
