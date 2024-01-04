@@ -75,7 +75,6 @@ plugins:
     type: domain_set
     args:
       files:
-        - "./domains/zhihu.txt"
         - "./domains/direct.txt"
         - "./domains/cn.txt"
 
