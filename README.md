@@ -161,7 +161,7 @@ ConditionFileIsExecutable=/usr/bin/mosdns
 
 [Service]
 WorkingDirectory=/etc/mosdns
-Type==notify
+Type=simple
 User=root
 StartLimitInterval=5
 StartLimitBurst=10
