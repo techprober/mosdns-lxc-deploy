@@ -60,8 +60,8 @@ mkdir -p /etc/mosdns
 Create sub directories
 
 ```bash
-mkdir -p /etc/mosdns/{ips,domains,downloads,custom,scripts}
-touch cache.dump
+sudo mkdir -p /etc/mosdns/{ips,domains,downloads,custom,scripts}
+sudo touch /etc/mosdns/cache.dump
 ```
 
 Make sure you have the following file structure present on your host:
